@@ -10,53 +10,70 @@ import Autosuggest from 'react-autosuggest';
 import Button from '@material-ui/core/Button';
 import theme from '../Theme';
 import Form from "./Form";
+import Sorter from './Sorter';
+import {withStyles, withTheme} from "@material-ui/core/styles/index";
+import PropTypes from 'prop-types';
+import SearchBar from './SearchBar';
+import AccountsUIWrapper from '../AccountsUIWrapper/AccountsUIWrapper';
+import Filter from './Filter';
 
-const style = {
+const styles = {
+    root: {
+        flexGrow: 1,
+    },
     home: {
         textDecoration: 'none',
         color: 'white',
         marginRight: '25px'
     },
-    search: {
-        justifyContent: 'center',
-        display: 'flex',
-        flexDirection: 'column'
+    searchBox: {
+        flex: 1,
     },
-    buttonLink: {
-        textDecoration: 'none',
-    },
-    button: {},
 };
 
-export default class Header extends Component {
+class Header extends Component {
+
     render() {
+        const {classes} = this.props;
         return (
-            <div>
-                <AppBar position='absolute'>
+            <div className={classes.root}>
+                <AppBar position='fixed'>
                     <Toolbar>
+                        <AccountsUIWrapper/>
 
-                        {/*PUT THIS IN GRID SYSTEM LATER - NO GHETTO STUFF*/}
                         <Typography variant="title">
-                            <Link to='/' style={style.home}>Marketplace</Link>
+                            <Link to='/' className={classes.home}>Marketplace</Link>
                         </Typography>
-                        <Grid container spacing={8}>
-                            <Grid item sm={8}
-                                  style={style.search}>
-                                <input/>
-                                {/*INPUT AUTOSUGGEST FEATURE LATER! Google React autosuggest and also look at Material UI documentation*/}
 
-                            </Grid>
-                            <Grid item sm={4}>
-                                <Form/>
-                            </Grid>
-                        </Grid>
+                        <div className={classes.searchBox}>
+                            <SearchBar
+                                input={this.props.input}
+                                handleInputChange={this.props.handleInputChange}
+                            />
+                        </div>
+
+                        {Meteor.user() ? <Form/> : ''}
+                        <Filter/>
+
+                        <Sorter sort={this.props.sort} handleSortChange={this.props.handleSortChange}/>
+
                     </Toolbar>
                 </AppBar>
-                <div>
-                    Tester
-                </div>
             </div>
         )
     }
 
 }
+
+
+Header.propTypes = {
+    classes: PropTypes.object.isRequired,
+    theme: PropTypes.object.isRequired,
+    input: PropTypes.string.isRequired,
+    handleInputChange: PropTypes.func.isRequired,
+    sort: PropTypes.object.isRequired,
+    handleSortChange: PropTypes.func.isRequired,
+};
+
+export default withTheme()(withStyles(styles)(Header))
+

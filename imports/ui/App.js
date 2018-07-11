@@ -1,4 +1,3 @@
-import {Listings} from '../api/listings.js';
 import {withTracker} from 'meteor/react-meteor-data';
 import React, {Fragment, Component} from 'react';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
@@ -13,7 +12,6 @@ class App extends Component {
                 <MuiThemeProvider theme={theme}>
                     <Router>
                         <div className='container'>
-                            {/*<Nav />*/}
                             <Switch>
                                 <Route exact path='/' component={Home}/>
                                 <Route render={() => <p>Not Found</p>}/>
@@ -28,6 +26,6 @@ class App extends Component {
 
 export default withTracker(() => {
     return {
-        items: Listings.find({}).fetch(),
+        currentUser: Meteor.user(),
     };
 })(App);

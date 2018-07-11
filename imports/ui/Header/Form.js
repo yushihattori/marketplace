@@ -17,8 +17,8 @@ import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
-import {Listings} from '../../api/listings';
-
+import theme from '../Theme';
+import {Meteor} from 'meteor/meteor';
 
 const styles = theme => ({
     button: {
@@ -42,6 +42,13 @@ const styles = theme => ({
     Fields: {
         marginLeft: '40px'
     },
+    roleLabel: {
+        fontSize: 17,
+    },
+    roleTitle: {
+        fontSize: 15,
+        fontWeight: 'bold',
+    },
     textFieldLabel: {
         fontSize: 20,
         fontWeight: 'bold',
@@ -54,7 +61,10 @@ const styles = theme => ({
         fontSize: 12,
     },
     checkbox: {
-        paddingTop: '30px'
+        paddingTop: '30px',
+    },
+    checkboxLabel: {
+        fontSize: 17,
     },
     upload: {
         display: 'none',
@@ -116,11 +126,9 @@ class Form extends Component {
         unit: 'ton',
         currency: 'USD',
         details: '',
+        role: 'seller',
         allowCounterOffers: true,
-        image: '',
-        role: 'seller'
     };
-
     handleOpen = () => {
         this.setState({open: true})
 
@@ -135,7 +143,12 @@ class Form extends Component {
         this.setState({
             [name]: event.target.value,
         });
+    };
 
+    handleNumberChange = name => event => {
+        this.setState({
+            [name]: event.target.value.replace(/[^\d.]/g, '')
+        });
     };
 
     handleChecked = name => event => {
@@ -147,32 +160,11 @@ class Form extends Component {
     };
 
     handleCreateListing = () => {
-        console.log(this.state);
-        const item = this.state;
-        const itemname = item.itemname;
-        const open = item.open;
-        const price = item.price;
-        const stock = item.stock;
-        const unit = item.unit;
-        const currency = item.currency;
-        const details = item.details;
-        const allowCounterOffers = item.allowCounterOffers;
-        const image = item.image;
-        const role = item.role;
+        this.setState({
+            price: parseFloat(this.state.price),
+            stock: parseFloat(this.state.stock),
+        }, () => Meteor.call('listings.insert', this.state));
 
-        Listings.insert({
-            itemname,
-            open,
-            stock,
-            unit,
-            currency,
-            details,
-            allowCounterOffers,
-            image,
-            price,
-            role,
-            createdAt: new Date(),
-        });
 
         this.handleClose()
     };
@@ -183,6 +175,8 @@ class Form extends Component {
 
         return (
             <div>
+
+                {/*New Listing Button*/}
                 <div>
                     <Button size="small" color="secondary" onClick={this.handleOpen}>
                         <Typography variant='button' className={classes.button}>
@@ -190,9 +184,13 @@ class Form extends Component {
                         </Typography>
                     </Button>
                 </div>
+
+
                 <div>
                     <Drawer open={this.state.open} anchor='right' onClose={this.handleClose}>
                         <div className={classes.form}>
+
+                            {/*Close Button*/}
                             <div className={classes.header}>
                                 <IconButton onClick={this.handleClose}>
                                     <CloseIcon/>
@@ -202,27 +200,37 @@ class Form extends Component {
                                     {this.state.itemname.length > 40 && '...'}
                                 </Typography>
                             </div>
+
+
                             <div>
                                 <Grid container spacing={0} className={classes.Fields}>
+
+                                    {/*Role Picker*/}
                                     <Grid container item sm={12} className={classes.role}>
                                         <div>
-                                            <div>Your Role*</div>
-                                            <FormControlLabel control={<Radio
-                                                checked={this.state.role === 'seller'}
-                                                onChange={this.handleChange('role')}
-                                                value="seller"
-                                            />} label={'Seller'}/>
-                                            <FormControlLabel control={<Radio
-                                                checked={this.state.role === 'buyer'}
-                                                onChange={this.handleChange('role')}
-                                                value="buyer"
-                                            />} label={'Buyer'}/>
+                                            <div className={classes.roleTitle}>Your Role*</div>
+                                            <FormControlLabel
+                                                classes={{label: classes.roleLabel}}
+                                                control={<Radio
+                                                    checked={this.state.role === 'seller'}
+                                                    onChange={this.handleChange('role')}
+                                                    value="seller"
+                                                />} label={'Seller'}/>
+                                            <FormControlLabel
+                                                classes={{label: classes.roleLabel}}
+                                                control={<Radio
+                                                    checked={this.state.role === 'buyer'}
+                                                    onChange={this.handleChange('role')}
+                                                    value="buyer"
+                                                />} label={'Buyer'}/>
                                         </div>
                                     </Grid>
+
+                                    {/*Item Name*/}
                                     <Grid item sm={11}>
                                         <TextField
                                             id='item-name'
-                                            label='Item Name'
+                                            label={`Item Name${this.state.itemname.length > 80 ? ' - 80 characters limit' : ''}`}
                                             value={this.state.itemname}
                                             onChange={this.handleChange('itemname')}
                                             placeholder='Enter item name here'
@@ -236,13 +244,17 @@ class Form extends Component {
                                             required
                                         />
                                     </Grid>
+
+                                    {/*Spacing*/}
                                     <Grid item sm={1}/>
+
+                                    {/*Stock*/}
                                     <Grid item sm={2}>
                                         <TextField
                                             id='stock'
                                             label='Stock'
                                             value={this.state.stock}
-                                            onChange={this.handleChange('stock')}
+                                            onChange={this.handleNumberChange('stock')}
                                             placeholder='Stock amount'
                                             helperText='Amount of stock available'
                                             margin='normal'
@@ -254,6 +266,8 @@ class Form extends Component {
 
                                         />
                                     </Grid>
+
+                                    {/*Units*/}
                                     <Grid item sm={1}>
                                         <TextField
                                             id='units'
@@ -279,13 +293,17 @@ class Form extends Component {
                                             ))}
                                         </TextField>
                                     </Grid>
+
+                                    {/*Spacing*/}
                                     <Grid item sm={1}/>
+
+                                    {/*Price*/}
                                     <Grid item sm={3}>
                                         <TextField
                                             id='price'
                                             label={'Price per ' + this.state.unit}
                                             value={this.state.price}
-                                            onChange={this.handleChange('price')}
+                                            onChange={this.handleNumberChange('price')}
                                             placeholder='Price'
                                             helperText='Price of item per unit'
                                             margin='normal'
@@ -301,6 +319,8 @@ class Form extends Component {
                                             fullWidth
                                         />
                                     </Grid>
+
+                                    {/*Currency Selector*/}
                                     <Grid item sm={1}>
                                         <TextField
                                             id='currency'
@@ -326,9 +346,12 @@ class Form extends Component {
                                             ))}
                                         </TextField>
                                     </Grid>
+
+                                    {/*Counteroffer Checkbox*/}
                                     <Grid item sm={4}>
                                         <FormControlLabel
                                             className={classes.checkbox}
+                                            classes={{label: classes.checkboxLabel}}
                                             control={
                                                 <Checkbox
                                                     checked={this.state.allowCounterOffers}
@@ -339,6 +362,8 @@ class Form extends Component {
                                             } label='Allow Counter Offers'
                                         />
                                     </Grid>
+
+                                    {/*Additional Details*/}
                                     <Grid item sm={11}>
                                         <TextField
                                             id='details'
@@ -354,7 +379,13 @@ class Form extends Component {
                                             fullWidth
                                         />
                                     </Grid>
+
+                                    {/*Spacing*/}
                                     <Grid item sm={1}/>
+
+                                    {/*Image upload*/}
+
+                                    {/*PUT IN COMPONENT LATER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/}
                                     <Grid container item sm={12} direction={"column"} alignItems={'center'}
                                           className={classes.uploadBox}>
                                         <label htmlFor="image-upload">
@@ -373,6 +404,8 @@ class Form extends Component {
                                             </Button>
                                         </label>
                                     </Grid>
+
+                                    {/*Upload form*/}
                                     <Button color="primary" variant="outlined" onClick={this.handleCreateListing}>
                                         TEMPORARY UPLOAD LISTING
                                     </Button>
