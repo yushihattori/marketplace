@@ -73,10 +73,10 @@ const theme = createMuiTheme({
       },
     },
     MuiListItem: {
-      gutter: {
-        paddingLeft: 0,
-        paddingRight: 0,
-      },
+      // gutter: {
+      //   paddingLeft: 0,
+      //   paddingRight: 0,
+      // },
     },
   },
 });
