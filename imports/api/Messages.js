@@ -26,15 +26,12 @@ const messagesSchema = new SimpleSchema({
   },
   Message: {
     type: String,
+    optional: true,
     label: 'Enter message',
   },
   OfferId: {
     type: String,
     label: 'Id of offer',
-  },
-  Status: {
-    type: String,
-    label: 'status of offer',
   },
   createdAt: {
     type: Date,

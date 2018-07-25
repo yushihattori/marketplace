@@ -107,24 +107,32 @@ class Bid extends Component {
 
   handleConfirmation = (confirmed) => {
     const {state, props} = this;
+    const Price = parseFloat(state.Price);
+    const Qty = state.Qty;
     if (confirmed) {
       const values = {
         itemId: props._id,
         listingOwnerId: props.owner,
-        QtyOffer: state.Qty,
-        PriceOffer: parseFloat(state.Price),
+        QtyOffer: Qty,
+        PriceOffer: Price,
+        PriceOfferId: 'id#',
+        QtyOfferId: 'id#',
+        Message: state.Message,
       };
+      console.log(values)
       Meteor.call('offers.insert', values, (error, result) => {
         const OfferId = result;
+        console.log(OfferId);
         const Message = {
           Message: state.Message,
-          Qty: state.Qty,
-          Price: parseFloat(state.Price),
+          Qty: Qty,
+          Price: Price,
           OfferId: OfferId,
-          Status: 'pending',
         };
-
-        Meteor.call('messages.insert', Message);
+        Meteor.call('messages.insert', Message, (error, result) => {
+          Meteor.call('offer.update-price', OfferId, result, Price);
+          Meteor.call('offer.update-qty', OfferId, result, Qty);
+        });
       });
 
       props.history.push('/profile');

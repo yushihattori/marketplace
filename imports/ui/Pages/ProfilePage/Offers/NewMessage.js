@@ -12,7 +12,17 @@ const styles = theme => (
   {
     Button: {
       fontSize: 16,
-    }
+    },
+    input: {
+      paddingBottom: 7,
+      paddingTop: 10,
+      fontSize: 18,
+    },
+    inputNumbers: {
+      paddingBottom: 0,
+      paddingTop: 0,
+      fontSize: 18,
+    },
   }
 );
 
@@ -38,26 +48,31 @@ class NewMessage extends Component {
   handleClick = () => {
     const {Price, Qty, Message} = this.state;
     if (Message.trim() || Qty.trim() || Price.trim()) {
+      const OfferId = this.props.OfferId;
       const message = {
         Price: Price ? parseFloat(Price) : -1,
         Qty: Qty ? parseFloat(Qty) : -1,
         Message: Message,
-        OfferId: this.props.OfferId,
-        Status: 'pending',
+        OfferId: OfferId,
       };
-      Meteor.call('messages.insert', message);
-      this.setState({
-        Price: '',
-        Qty: '',
-        Message: '',
-      });
-    } else {
-      this.setState({
-        Price: '',
-        Qty: '',
-        Message: '',
+
+
+      Meteor.call('messages.insert', message, (error, MessageId) => {
+        if (Price) {
+          Meteor.call('offer.update-price', OfferId, MessageId, Price);
+          this.props.updateOffer('PriceOfferId', MessageId);
+        }
+        if (Qty) {
+          Meteor.call('offer.update-qty', OfferId, MessageId, Qty);
+          this.props.updateOffer('QtyOfferId', MessageId);
+        }
       });
     }
+    this.setState({
+      Price: '',
+      Qty: '',
+      Message: '',
+    });
   };
 
   render() {
@@ -76,6 +91,7 @@ class NewMessage extends Component {
               multiline
               fullWidth
               autoFocus
+              InputProps={{className: classes.input}}
               InputLabelProps={{shrink: true,}}
             />
           </Grid>
@@ -87,6 +103,7 @@ class NewMessage extends Component {
               onChange={handleChange('Price')}
               onKeyPress={handleKeyPress}
               fullWidth
+              InputProps={{className: classes.inputNumbers}}
               InputLabelProps={{shrink: true,}}
             />
           </Grid>
@@ -98,6 +115,7 @@ class NewMessage extends Component {
               onChange={handleChange('Qty')}
               onKeyPress={handleKeyPress}
               fullWidth
+              InputProps={{className: classes.inputNumbers}}
               InputLabelProps={{shrink: true,}}
             />
           </Grid>

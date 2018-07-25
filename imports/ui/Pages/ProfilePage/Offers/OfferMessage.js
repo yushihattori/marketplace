@@ -9,6 +9,8 @@ import Typography from '@material-ui/core/Typography'
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider'
 import Paper from '@material-ui/core/Paper'
+import theme from '../../../Theme'
+import {Meteor} from 'meteor/meteor';
 
 const styles = theme => (
   {
@@ -16,83 +18,112 @@ const styles = theme => (
       flexGrow: 1,
     },
     Container: {
-      width: '60%',
-      margin: 20,
-    },
-    Status: {
-      color: 'red',
+      maxWidth: '100%',
+      width: 'auto',
+      padding: 10,
     },
     New: {
       display: 'flex',
+      fontSize: 16,
     },
     Message: {
-      wordWrap:'break-word'
+      wordWrap: 'break-word',
+      fontSize: 16,
+    },
+    typography: {
+      fontSize: 16,
+    },
+    name: {
+      fontSize: 16,
+      fontWeight: 'bold',
+      paddingRight: 10,
+    },
+    created: {
+      fontSize: 16,
     }
   }
 );
 
 class OfferMessage extends Component {
-
   scrollToBottom = () => {
-    this.messagesEnd && this.messagesEnd.scrollIntoView({ behavior: "auto"});
+    this.messagesEnd && this.messagesEnd.scrollIntoView({behavior: "auto"});
   };
 
   componentDidMount() {
     this.scrollToBottom();
-
   };
 
   componentDidUpdate() {
     this.scrollToBottom();
   };
 
+  formatDate = date => {
+    return date.toLocaleString([], {
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
 
   render() {
-    const {classes, messages, loading} = this.props;
+    const {formatDate, state} = this;
+    const {classes, messages, loading, listing, PriceOfferId, QtyOfferId} = this.props;
+    const rejected = {
+      color: 'grey',
+      textDecoration: 'line-through',
+    };
+
     return (
       !loading ?
         <div className={classes.root}>
           {messages.map(message => {
-            const text = {
-              color: 'black',
-            };
-            const Paper = {
-              backgroundColor: 'blue',
-            };
             return (
-              <Paper key={message._id} className={classes.Container} style={Paper}>
-                <Grid container key={message} direction={'row'}>
-                  <Grid container item xs={12} justify={"space-between"}>
-                    <Typography style={text}>
+              <div key={message._id} className={classes.Container}>
+                <Grid container>
+                  <Grid container item>
+                    <Typography color={message.owner === Meteor.userId() ? "primary" : "default"} className={classes.name}>
                       {message.username}
                     </Typography>
-                    <Typography className={classes.Status} style={text}>
-                      {message.Status}
+                    <Typography className={classes.created}>
+                      {formatDate(message.createdAt)}
                     </Typography>
                   </Grid>
-                  <Grid container item spacing={40} xs={12} alignItems={'center'} className={classes.New}>
+                  <Grid container item spacing={24} xs={12} alignItems={'center'} className={classes.New}>
+                    {message.Price !== -1 &&
                     <Grid item>
-                      <Typography style={text}>
-                        {message.Price === -1 ? '' : `New Price: ${message.Price}`}
+                      <Typography
+                        color={"primary"}
+                        className={classes.typography}
+                        style={PriceOfferId !== message._id ? rejected : {}}>
+                        {`Offer Price: $${message.Price} per ${listing.unit}`}
                       </Typography>
                     </Grid>
-                    <Grid>
-                      <Typography style={text}>
-                        {message.Qty === -1 ? '' : `New Quantity: ${message.Qty}`}
+                    }
+                    {message.Qty !== -1 &&
+                    <Grid item>
+                      <Typography
+                        color={"primary"}
+                        className={classes.typography}
+                        style={QtyOfferId !== message._id ? rejected : {}}>
+                        {`Offer Quantity: ${message.Qty} ${listing.unit}${message.Qty > 1 ? 's' : ''}`}
                       </Typography>
                     </Grid>
+                    }
                   </Grid>
                   <Grid item xs={12}>
-                    <Typography className={classes.Message} style={text}>
+                    <Typography className={classes.Message}>
                       {message.Message}
                     </Typography>
                   </Grid>
                 </Grid>
-              </Paper>
+              </div>
             )
           })}
-          <div style={{ float:"left", clear: "both" }}
-               ref={(el) => { this.messagesEnd = el; }}>
+          <div style={{float: "left", clear: "both"}}
+               ref={(el) => {
+                 this.messagesEnd = el;
+               }}>
           </div>
         </div> : <Loading/>
     )
@@ -104,11 +135,13 @@ OfferMessage.propTypes = {
 };
 
 export default withTracker((props) => {
-  const {OfferId} = props;
+  const {OfferId, ListingId} = props;
+  const ListingSubscription = Meteor.subscribe('item', ListingId);
   const messagesSubscription = Meteor.subscribe('messages', OfferId);
   return {
-    loading: !messagesSubscription.ready(),
-    messages: Messages.find({"OfferId": OfferId}).fetch(),
+    loading: !ListingSubscription.ready() && !messagesSubscription.ready(),
+    listing: Listings.findOne({"_id": ListingId}),
+    messages: Messages.find({"OfferId": OfferId},{sort:{createdAt: 1}}).fetch(),
   }
 })(withStyles(styles)(OfferMessage))
 

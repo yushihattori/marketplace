@@ -6,8 +6,6 @@ import {withTracker} from 'meteor/react-meteor-data';
 import Listings from "../../../../api/Listings";
 import Loading from '../../../Components/Loading';
 import Typography from '@material-ui/core/Typography'
-import Divider from '@material-ui/core/Divider'
-import Messages from '../../../../api/Messages';
 
 const styles = theme => (
   {
@@ -27,7 +25,7 @@ const styles = theme => (
       top: 0,
       fontSize: 15,
     },
-    Price: {
+    Red: {
       color: 'red',
     },
     CurrentOffer: {
@@ -36,16 +34,34 @@ const styles = theme => (
     message: {
       fontSize: 16,
       color: 'black',
-      padding: 5,
+    },
+    OfferChange: {
+      fontSize: 16,
+      color: 'black',
+      fontStyle: 'italic',
     }
   }
 );
 
 class OfferCard extends Component {
-  render() {
-    const {props} = this;
-    const {classes, listing, offer, loading, messages} = this.props;
+  OfferChangeRender = (OfferChange, PriceOffer, QtyOffer, unit) => {
+    switch (OfferChange) {
+      case 'both':
+        return <span>
+          {`Offer: ${QtyOffer} ${unit}${QtyOffer > 1 ? 's' : ''} at $${PriceOffer} per ${unit}`}</span>;
+      case 'price':
+        return <span>{`Offer: $${PriceOffer} per ${unit}`}</span>;
+      case 'qty':
+        return <span>{`Offer: ${QtyOffer} ${unit}${QtyOffer > 1 ? 's' : ''}`}</span>;
+      default:
+        return null
+    }
+  };
 
+  render() {
+    const {props, OfferChangeRender} = this;
+    const {classes, listing, loading, offer} = this.props;
+    const {_id, PriceOfferId, QtyOfferId, Message, MessageUser, OfferChange, QtyOffer, PriceOffer} = offer;
     const created = offer.createdAt.toLocaleString([], {
       month: '2-digit',
       day: '2-digit',
@@ -53,10 +69,14 @@ class OfferCard extends Component {
       hour: '2-digit',
       minute: '2-digit'
     });
-
     return (
-      !loading && messages ?
-        <ListItem button divider onClick={() => props.handleClick(offer._id)} className={classes.listItem}>
+      !loading ?
+        <ListItem
+          button
+          divider
+          className={classes.listItem}
+          onClick={() => props.handleClick(_id, listing._id, PriceOfferId, QtyOfferId)}
+        >
           <Typography className={classes.status}>
             Pending
           </Typography>
@@ -64,16 +84,21 @@ class OfferCard extends Component {
             {listing.itemname}
           </Typography>
           <Typography className={classes.CurrentOffer}>
-            {`Current Offer: ${offer.QtyOffer} ${listing.unit}s at `}
-            <span className={classes.Price}>{`$${offer.PriceOffer.toFixed(2)}`}</span>
+            {`Current Offer: `}
+            <span className={classes.Red}>{`${QtyOffer} ${listing.unit}s`}</span>
+            {` at `}
+            <span className={classes.Red}>{`$${PriceOffer.toFixed(2)}`}</span>
             {` per ${listing.unit}`}
           </Typography>
-          <Typography className={classes.message}>
-            {/*{offer.Message.substr(0,165)}*/}
-            {/*{offer.Message.length > 165 && "..."}*/}
-            {messages.Message.substr(0,165)}
-            {messages.Message.length > 165 && "..."}
-          </Typography>
+          <div>
+            <Typography className={classes.message}>
+              {`${MessageUser}: `}
+              {Message ? `${Message.substr(0, 100)} ${Message.length > 100 ? "..." : ''}` : ''}
+            </Typography>
+            <Typography className={classes.OfferChange}>
+              {OfferChangeRender(OfferChange, PriceOffer, QtyOffer, listing.unit)}
+            </Typography>
+          </div>
         </ListItem> : <Loading/>
     )
   }
@@ -84,14 +109,11 @@ OfferCard.propTypes = {
 };
 
 export default withTracker((props) => {
-  const listingId = props.offer.itemId;
-  const OfferId = props.offer._id;
-  const itemSubscription = Meteor.subscribe('item', listingId);
-  const messagesSubscription = Meteor.subscribe('messages', OfferId);
+  const ListingId = props.offer.itemId;
+  const ListingSubscription = Meteor.subscribe('item', ListingId);
   return {
-    loading: !itemSubscription.ready() && !messagesSubscription.ready(),
-    listing: Listings.findOne({"_id": listingId}),
-    messages: Messages.findOne({"OfferId": OfferId})
+    loading: !ListingSubscription.ready(),
+    listing: Listings.findOne({"_id": ListingId}),
   }
 })(withStyles(styles)(OfferCard))
 

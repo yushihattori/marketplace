@@ -28,6 +28,29 @@ const offersSchema = new SimpleSchema({
     type: String,
     label: 'Id of the item',
   },
+  PriceOfferId: {
+    type: String,
+    label: 'the newest offer'
+  },
+  Message: {
+    type: String,
+    optional: true,
+    label: 'the message'
+  },
+  MessageUser: {
+    type: String,
+    optional: true,
+    label: 'the message'
+  },
+  OfferChange: {
+    type: String,
+    optional: true,
+    label: 'the change in price or qty'
+  },
+  QtyOfferId: {
+    type: String,
+    label: 'the newest offer'
+  },
   listingOwnerId: {
     type: String,
     label: 'Id of the listing owner',
