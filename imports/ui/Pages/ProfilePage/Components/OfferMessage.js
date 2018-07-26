@@ -7,9 +7,6 @@ import Listings from "../../../../api/Listings";
 import Loading from '../../../Components/Loading';
 import Typography from '@material-ui/core/Typography'
 import Grid from '@material-ui/core/Grid';
-import Divider from '@material-ui/core/Divider'
-import Paper from '@material-ui/core/Paper'
-import theme from '../../../Theme'
 import {Meteor} from 'meteor/meteor';
 
 const styles = theme => (
@@ -46,7 +43,7 @@ const styles = theme => (
 
 class OfferMessage extends Component {
   scrollToBottom = () => {
-    this.messagesEnd && this.messagesEnd.scrollIntoView({behavior: "auto"});
+      this.messagesEnd && this.messagesEnd.scrollIntoView({block: "nearest", behavior: "auto"})
   };
 
   componentDidMount() {

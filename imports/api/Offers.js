@@ -59,6 +59,10 @@ const offersSchema = new SimpleSchema({
     type: Date,
     label: 'Date and time created',
   },
+  updated: {
+    type: Date,
+    label: 'Date and time updated',
+  },
   owner: {
     type: String,
     label: 'Id of user offering the bid',

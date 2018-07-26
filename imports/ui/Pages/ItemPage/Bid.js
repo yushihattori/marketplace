@@ -119,10 +119,8 @@ class Bid extends Component {
         QtyOfferId: 'id#',
         Message: state.Message,
       };
-      console.log(values)
       Meteor.call('offers.insert', values, (error, result) => {
         const OfferId = result;
-        console.log(OfferId);
         const Message = {
           Message: state.Message,
           Qty: Qty,
@@ -135,7 +133,7 @@ class Bid extends Component {
         });
       });
 
-      props.history.push('/profile');
+      props.history.push('/profile/offers');
       this.setState({ClickAndConfirm: true})
     }
   };
