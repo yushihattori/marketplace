@@ -44,11 +44,11 @@ const styles = {
 
 class Header extends Component {
   handleClick = () => {
-    props.history.push('/profile/offers')
+    props.history.push('/profile/Offers/YourOffers')
   };
 
   render() {
-    const {props, handleProfile} = this;
+    const {props} = this;
     const {classes, CurrentPage, children} = this.props;
     let SearchPage = (CurrentPage === 'SearchPage');
 
@@ -92,8 +92,8 @@ class Header extends Component {
                   {Meteor.user() && <Form/>}
                 </Grid>
                 <Grid item>
-                  <Link to='/profile/offers' onClick={this.handleClick}>
-                    <IconButton onClick={handleProfile}>
+                  <Link to='/profile/Offers/YourOffers' onClick={this.handleClick}>
+                    <IconButton>
                       <AccountCircle className={classes.icon}/>
                     </IconButton>
                   </Link>

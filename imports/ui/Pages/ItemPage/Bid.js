@@ -127,7 +127,8 @@ class Bid extends Component {
           Price: Price,
           OfferId: OfferId,
         };
-        Meteor.call('messages.insert', Message, (error, result) => {
+        const itemId = props._id;
+        Meteor.call('messages.insert', Message, itemId,(error, result) => {
           Meteor.call('offer.update-price', OfferId, result, Price);
           Meteor.call('offer.update-qty', OfferId, result, Qty);
         });

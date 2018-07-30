@@ -48,7 +48,7 @@ Meteor.publish('item', function item(listingId) {
 });
 
 Meteor.publish('user-listings', function userListings() {
-  return Listings.find({"owner": Meteor.userId()},{sort: {createdAt: -1}})
+  return Listings.find({"owner": Meteor.userId()},{sort: {updated: -1}})
 });
 
 Meteor.publish('messages', function messages(OfferId) {
@@ -61,8 +61,8 @@ Meteor.publish('offers', function offers(){
   return Offers.find({"owner": Meteor.userId()})
 });
 
-Meteor.publish('listing-offers', function listingOffers(itemId){
-  return Offers.find({"itemId": itemId}, {sort: {updated: -1}})
+Meteor.publish('all-listing-offers', function allListingOffers(){
+  return Offers.find({"listingOwnerId": Meteor.userId()}, {sort: {updated: -1}})
 });
 
 Meteor.publish('files', function (imageId) {

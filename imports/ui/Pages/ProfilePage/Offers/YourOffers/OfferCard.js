@@ -1,19 +1,22 @@
 import React, {Component} from 'react';
 import {withStyles} from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import ListItem from '@material-ui/core/ListItem';
 import {withTracker} from 'meteor/react-meteor-data';
-import Listings from "../../../../api/Listings";
-import Loading from '../../../Components/Loading';
+import Listings from "../../../../../api/Listings";
+import Loading from '../../../../Components/Loading';
 import Typography from '@material-ui/core/Typography'
+import MenuItem from '@material-ui/core/MenuItem'
+import theme from '../../../../Theme'
+import UserAgreeIcon from '../Components/UserAgreeIcon'
 
-const styles = theme => (
+const styles = () => (
   {
     listItem: {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'flex-start',
       position: 'relative',
+      height: 100,
     },
     itemname: {
       fontSize: 19,
@@ -22,11 +25,9 @@ const styles = theme => (
     status: {
       position: 'absolute',
       right: 5,
-      top: 0,
+      top: 5,
       fontSize: 15,
-    },
-    Red: {
-      color: 'red',
+      display: 'flex',
     },
     CurrentOffer: {
       fontSize: 18,
@@ -37,8 +38,14 @@ const styles = theme => (
     },
     OfferChange: {
       fontSize: 16,
-      color: 'black',
       fontStyle: 'italic',
+    },
+    primary: {
+      color: theme.palette.primary.main
+    },
+    AgreeStyle: {
+      color: 'green',
+      fontStyle: "italic"
     }
   }
 );
@@ -61,7 +68,7 @@ class OfferCard extends Component {
   render() {
     const {props, OfferChangeRender} = this;
     const {classes, listing, loading, offer} = this.props;
-    const {_id, PriceOfferId, QtyOfferId, Message, MessageUser, OfferChange, QtyOffer, PriceOffer} = offer;
+    const {_id, Message, MessageUser, OfferChange, QtyOffer, PriceOffer, username, OfferUserAgree, ListingUserAgree} = offer;
     const created = offer.createdAt.toLocaleString([], {
       month: '2-digit',
       day: '2-digit',
@@ -71,35 +78,47 @@ class OfferCard extends Component {
     });
     return (
       !loading ?
-        <ListItem
+        <MenuItem
           button
           divider
+          selected={this.props.OfferId === _id}
           className={classes.listItem}
-          onClick={() => props.handleClick(_id, listing._id, PriceOfferId, QtyOfferId)}
+          onClick={() => props.handleClick(offer._id)}
         >
-          <Typography className={classes.status}>
-            Pending
-          </Typography>
+          <div className={classes.status}>
+            <UserAgreeIcon
+              ListingUserAgree={ListingUserAgree}
+              name={username}
+            />
+            <UserAgreeIcon
+              OfferUserAgree={OfferUserAgree}
+              name={"You"}
+            />
+          </div>
           <Typography className={classes.itemname}>
             {listing.itemname}
           </Typography>
           <Typography className={classes.CurrentOffer}>
             {`Current Offer: `}
-            <span className={classes.Red}>{`${QtyOffer} ${listing.unit}s`}</span>
+            <span className={classes.primary}>{`${QtyOffer} ${listing.unit}s`}</span>
             {` at `}
-            <span className={classes.Red}>{`$${PriceOffer.toFixed(2)}`}</span>
+            <span className={classes.primary}>{`$${PriceOffer.toFixed(2)}`}</span>
             {` per ${listing.unit}`}
           </Typography>
           <div>
             <Typography className={classes.message}>
               {`${MessageUser}: `}
-              {Message ? `${Message.substr(0, 100)} ${Message.length > 100 ? "..." : ''}` : ''}
+              {Message ?
+                Message.substr(0, 4) === "#OUA" ?
+                  <span className={classes.AgreeStyle}>{Message.substr(4)}</span> :
+                  `${Message.substr(0, 100)} ${Message.length > 100 ? "..." : ''}` : ''
+              }
             </Typography>
-            <Typography className={classes.OfferChange}>
+            <Typography color={"primary"} className={classes.OfferChange}>
               {OfferChangeRender(OfferChange, PriceOffer, QtyOffer, listing.unit)}
             </Typography>
           </div>
-        </ListItem> : <Loading/>
+        </MenuItem> : <Loading/>
     )
   }
 }

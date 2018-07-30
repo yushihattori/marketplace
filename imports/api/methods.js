@@ -1,5 +1,5 @@
 import {Meteor} from 'meteor/meteor';
-import {check, Match} from 'meteor/check';
+import {check} from 'meteor/check';
 import Listings from './Listings';
 import Offers from './Offers';
 import Messages from './Messages';
@@ -30,6 +30,8 @@ Meteor.methods({
       createdAt: new Date(),
       owner: this.userId,
       lowercaseName: values.itemname.toLowerCase(),
+      NumberOfOffers: 0,
+      updated: new Date(),
       username: Meteor.users.findOne(this.userId).username,
     });
   },
@@ -49,17 +51,22 @@ Meteor.methods({
     });
 
     const username = Meteor.users.findOne(this.userId).username;
-    const {Qty, Price, Message} = values;
+    const {Qty, Price} = values;
     let OfferChange = 'none';
     if (Qty !== -1 && Price !== -1) {
       OfferChange = 'both';
-    } else if(Qty !== -1) {
+    } else if (Qty !== -1) {
       OfferChange = 'qty';
     } else if (Price !== -1) {
       OfferChange = 'price';
     } else {
       OfferChange = 'none';
     }
+
+    Listings.update(
+      {_id: values.itemId},
+      {$inc: {NumberOfOffers: 1}}
+    );
 
     return Offers.insert({
       ...values,
@@ -69,14 +76,16 @@ Meteor.methods({
       MessageUser: username,
       OfferChange: OfferChange,
       username: username,
+      OfferUserAgree: false,
+      ListingUserAgree: false,
+      DealEnded: false,
     })
   },
 
-  'messages.insert'(values) {
+  'messages.insert'(values, itemId) {
     if (!this.userId) {
       throw new Meteor.Error('not-authorized');
     }
-
     check(values, {
       Qty: Number,
       Price: Number,
@@ -89,13 +98,22 @@ Meteor.methods({
     let OfferChange = 'none';
     if (Qty !== -1 && Price !== -1) {
       OfferChange = 'both';
-    } else if(Qty !== -1) {
+    } else if (Qty !== -1) {
       OfferChange = 'qty';
     } else if (Price !== -1) {
       OfferChange = 'price';
     } else {
       OfferChange = 'none';
     }
+
+    Listings.update(
+      {_id: itemId},
+      {
+        $set: {
+          "updated": new Date(),
+        }
+      }
+    );
 
     Offers.update(
       {_id: values.OfferId},
@@ -124,7 +142,14 @@ Meteor.methods({
     check(PriceOfferId, String);
     check(OfferId, String);
 
-    Offers.update({_id: OfferId}, {$set: {"PriceOfferId": PriceOfferId, "PriceOffer": PriceOffer}})
+    Offers.update({_id: OfferId}, {
+      $set: {
+        "PriceOfferId": PriceOfferId,
+        "PriceOffer": PriceOffer,
+        "OfferUserAgree": false,
+        "ListingUserAgree": false
+      }
+    })
   },
 
   'offer.update-qty'(OfferId, QtyOfferId, QtyOffer) {
@@ -134,7 +159,34 @@ Meteor.methods({
     check(QtyOfferId, String);
     check(OfferId, String);
 
-    Offers.update({_id: OfferId}, {$set: {"QtyOfferId": QtyOfferId, "QtyOffer": QtyOffer}})
+    Offers.update({_id: OfferId}, {
+      $set: {
+        "QtyOfferId": QtyOfferId,
+        "QtyOffer": QtyOffer,
+        "OfferUserAgree": false,
+        "ListingUserAgree": false
+      }
+    })
+  },
+
+  'offer.update-agree'(OfferId, OfferOwner, ListingOwner, bool) {
+    if (!this.userId) {
+      throw new Meteor.Error('not-authorized');
+    }
+    check(OfferId, String);
+    check(OfferOwner, String);
+    check(ListingOwner, String);
+    check(bool, Boolean);
+
+    const currentUser = this.userId;
+
+    let UserAgree = '';
+    if (currentUser === OfferOwner) {
+      UserAgree = "OfferUserAgree";
+    } else if (currentUser === ListingOwner) {
+      UserAgree = "ListingUserAgree";
+    }
+    Offers.update({_id: OfferId}, {$set: {[UserAgree]: bool}})
   }
 
 

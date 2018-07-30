@@ -70,6 +70,18 @@ const offersSchema = new SimpleSchema({
   username: {
     type: String,
     label: 'username of the user offering the bid',
+  },
+  OfferUserAgree: {
+    type: Boolean,
+    label: 'If the user who made the offer agrees with the current offer'
+  },
+  ListingUserAgree: {
+    type: Boolean,
+    label: 'If the user who made the listing agrees with the current offer'
+  },
+  DealEnded: {
+    type: Boolean,
+    label: 'If the deal has been ended by both users agreeing or someone ends the deal'
   }
 });
 

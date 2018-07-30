@@ -80,6 +80,16 @@ const listingsSchema = new SimpleSchema({
     type: String,
     label: 'The username of the owner of this trade',
   },
+  updated: {
+    type: Date,
+    optional: true,
+    label: 'When it was last updated with an offer (or first created)'
+  },
+  NumberOfOffers: {
+    type: Number,
+    optional: true,
+    label: 'Number of offers made on this listing',
+  }
 });
 
 Listings.attachSchema(listingsSchema);

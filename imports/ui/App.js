@@ -6,8 +6,6 @@ import {MuiThemeProvider} from '@material-ui/core/styles';
 import ItemPage from './Pages/ItemPage/ItemPage'
 import SearchPage from './Pages/SearchPage/SearchPage'
 import Header from './Components/Header/Header'
-import Tester from './Components/Tester'
-import queryString from "query-string";
 import ProfilePage from './Pages/ProfilePage/ProfilePage'
 
 class App extends Component {
@@ -21,7 +19,7 @@ class App extends Component {
         min: 0,
         max: 1000,
       },
-      BuyerSeller: 'seller',
+      BuyerSeller: 'both',
     }
   };
 
