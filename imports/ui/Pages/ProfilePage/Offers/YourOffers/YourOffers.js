@@ -4,12 +4,13 @@ import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid'
 import List from '@material-ui/core/List';
 import {withTracker} from 'meteor/react-meteor-data';
-import offers from '../../../../../api/Offers';
+import offers from '../../../../../api/Offers/Offers';
 import OfferCard from './OfferCard';
 import OfferMessage from '../Components/OfferMessage';
 import {Meteor} from 'meteor/meteor';
-import NewMessage from '../Components/NewMessage';
+import NewMessage from '../Components/NewMessage/NewMessage';
 import Typography from '@material-ui/core/Typography'
+import AcceptOffer from "../Components/AcceptOffer";
 
 const styles = theme => (
   {
@@ -39,7 +40,7 @@ const styles = theme => (
     },
     newMessage: {
       paddingLeft: 10,
-      paddingBottom: 10,
+      paddingBottom: 30,
       paddingTop: 10,
     },
     none: {
@@ -71,7 +72,6 @@ class YourOffers extends Component {
     const {ClickedOfferId} = this.state;
     const {handleClick, updateOffer, state} = this;
     const {classes, offers} = this.props;
-
     const ClickedOffer = offers.find(e => {
       return e._id === ClickedOfferId
     });
@@ -92,24 +92,25 @@ class YourOffers extends Component {
                 ))}
               </List>
             </Grid>
+            {ClickedOffer &&
             <Grid container item direction={"column"} xs={9}>
+              <AcceptOffer offer={ClickedOffer}/>
               <div className={classes.messages}>
-                {ClickedOffer &&
                 <OfferMessage
                   OfferId={ClickedOffer._id}
                   ListingId={ClickedOffer.itemId}
                   PriceOfferId={ClickedOffer.PriceOfferId}
                   QtyOfferId={ClickedOffer.QtyOfferId}
-                />}
+                />
               </div>
               <div className={classes.newMessage}>
-                {ClickedOffer &&
                 <NewMessage
                   updateOffer={updateOffer}
                   offer={ClickedOffer}
-                />}
+                />
               </div>
             </Grid>
+            }
           </Grid> : <Typography variant={"subheading"} className={classes.none}>No offers created</Typography>}
       </div>
     )

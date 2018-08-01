@@ -8,15 +8,18 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import OfferMessage from '../Components/OfferMessage';
-import NewMessage from '../Components/NewMessage';
+import NewMessage from '../Components/NewMessage/NewMessage';
 import theme from '../../../../Theme'
 import Loading from '../../../../Components/Loading';
 import UserAgreeIcon from '../Components/UserAgreeIcon';
+import ButtonBase from '@material-ui/core/ButtonBase';
+import Paper from '@material-ui/core/Paper'
+import AcceptOffer from '../Components/AcceptOffer';
 
 const styles = () => (
   {
     details: {
-      height: 500
+      height: 600
     },
     username: {
       fontSize: 18,
@@ -30,7 +33,6 @@ const styles = () => (
       overflow: 'auto',
     },
     newMessage: {
-      paddingLeft: 10,
       marginBottom: 10,
     },
     OfferChange: {
@@ -42,10 +44,18 @@ const styles = () => (
     },
     bothChecksContainer: {
       display: 'flex',
+      justifyContent: 'flex-end'
     },
     AgreeStyle: {
       color: 'green',
       fontStyle: "italic"
+    },
+    StartTrade: {
+      width: '100%',
+      backgroundColor: theme.palette.primary.main
+    },
+    StartTradeLabel: {
+      color: 'white'
     }
   }
 );
@@ -102,7 +112,7 @@ class Panel extends Component {
           onChange={handleChange(_id)}
         >
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
-            <Grid container>
+            <Grid container alignItems={"center"}>
               <Grid item xs={2}>
                 <Typography className={classes.username}>
                   {username}
@@ -118,8 +128,8 @@ class Panel extends Component {
                   {QtyOffer} {listing.unit}{QtyOffer > 1 && 's'}
                 </Typography>
               </Grid>
-              <Grid container justify={"space-between"} item xs>
-                <Grid item xs>
+              <Grid container justify={"space-between"} alignItems={"center"} zeroMinWidth item xs>
+                <Grid item xs={10}>
                   <Typography className={classes.typography}>
                     {`${MessageUser}: `}
                     <span className={classes.OfferChange}>
@@ -128,10 +138,10 @@ class Panel extends Component {
                     {Message ?
                       Message.substr(0, 4) === "#OUA" ?
                         <span className={classes.AgreeStyle}>{Message.substr(4)}</span> :
-                        `${Message.substr(0, 150)}${Message.length > 150 && '...'}` : ''}
+                        `${Message.substr(0, 150)}${Message.length > 150 ? '...' : ''}` : ''}
                   </Typography>
                 </Grid>
-                <Grid item className={classes.bothChecksContainer}>
+                <Grid item xs={2} className={classes.bothChecksContainer}>
                   <UserAgreeIcon
                     OfferUserAgree={OfferUserAgree}
                     name={username}
@@ -145,7 +155,18 @@ class Panel extends Component {
             </Grid>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails className={classes.details}>
+            {TimedOut &&
             <Grid container direction={"column"} className={classes.outline}>
+              {offer.OfferUserAgree && offer.ListingUserAgree &&
+              <ButtonBase>
+                <Paper elevation={1} square className={classes.StartTrade}>
+                  <Typography className={classes.StartTradeLabel}>
+                    Both users have agreed. Click here to start the trade.
+                  </Typography>
+                </Paper>
+              </ButtonBase>
+              }
+              <AcceptOffer offer={offer}/>
               <div className={classes.messages}>
                 {TimedOut ?
                   <OfferMessage
@@ -165,8 +186,9 @@ class Panel extends Component {
                   /> : ''}
               </div>
             </Grid>
+            }
           </ExpansionPanelDetails>
-        </ExpansionPanel> : <div>Didn't load</div>
+        </ExpansionPanel> : <div>Loading</div>
     )
   }
 }

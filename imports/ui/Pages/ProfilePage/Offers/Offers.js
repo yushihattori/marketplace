@@ -12,7 +12,7 @@ class Offers extends Component {
   state = {
     YourListingsClickedId: null,
     YourOffersClickedId: null,
-    OfferTab: this.props.location.pathname && this.props.location.pathname.substr(16)
+    OfferTab: this.props.location.pathname ? this.props.location.pathname.substr(16) : "YourOffers"
   };
 
   handleClick = (name, value) => {

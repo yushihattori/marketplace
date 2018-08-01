@@ -3,11 +3,11 @@ import {withStyles} from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import ToggleButton, {ToggleButtonGroup} from '@material-ui/lab/ToggleButton';
 import Typography from '@material-ui/core/Typography'
-import ListIcon from '@material-ui/icons/List';
+import GridIcon from '@material-ui/icons/Apps';
 
 const styles = theme => (
   {
-    container:{
+    container: {
       marginBottom: 20,
     },
     root: {
@@ -34,34 +34,34 @@ class BuyerSeller extends Component {
 
   handleChange = alignment => {
     alignment !== null &&
-    this.props.handleFilterChange('BuyerSeller', alignment)
+    this.props.handleChange('view', alignment)
   };
 
   render() {
-    const {classes, BuyerSeller} = this.props;
+    const {classes, view} = this.props;
     return (
       <div className={classes.container}>
         <div className={classes.title}>
-          <ListIcon className={classes.icon}/>
+          <GridIcon className={classes.icon}/>
           <Typography variant={"headline"} className={classes.header}>
-            Listing Type:
+            Item View:
           </Typography>
         </div>
         <div className={classes.root}>
-          <ToggleButtonGroup value={BuyerSeller} exclusive={true} onChange={this.handleChange}>
-            <ToggleButton disableRipple value={"both"}>
+          <ToggleButtonGroup value={view} exclusive={true} onChange={this.handleChange}>
+            <ToggleButton disableRipple value={"Card"}>
               <Typography variant={"body1"} className={classes.typography}>
-                Both
+                Card
               </Typography>
             </ToggleButton>
-            <ToggleButton disableRipple value={"seller"}>
+            <ToggleButton disableRipple value={"Long Card"}>
               <Typography variant={"body1"} className={classes.typography}>
-                Seller
+                Long Card
               </Typography>
             </ToggleButton>
-            <ToggleButton disableRipple value={"buyer"}>
+            <ToggleButton disableRipple value={"List"}>
               <Typography variant={"body1"} className={classes.typography}>
-                Buyer
+                List
               </Typography>
             </ToggleButton>
           </ToggleButtonGroup>

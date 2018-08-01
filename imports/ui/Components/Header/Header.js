@@ -5,12 +5,11 @@ import Typography from '@material-ui/core/Typography';
 import {Link} from "react-router-dom";
 import Grid from '@material-ui/core/Grid';
 import Form from "./Form/Form";
-import Sorter from './Sorter';
 import {withStyles, withTheme} from "@material-ui/core/styles/index";
 import PropTypes from 'prop-types';
-import SearchBar from './SearchBar';
-import AccountsUIWrapper from '../AccountsUIWrapper';
-import Faker from '../Faker'
+import SearchBar from './Components/SearchBar';
+import AccountsUIWrapper from './Components/AccountsUIWrapper';
+import Faker from './Components/Faker'
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu'
 import AccountCircle from '@material-ui/icons/AccountCircle'
@@ -43,14 +42,9 @@ const styles = {
 };
 
 class Header extends Component {
-  handleClick = () => {
-    props.history.push('/profile/Offers/YourOffers')
-  };
-
   render() {
     const {props} = this;
     const {classes, CurrentPage, children} = this.props;
-    let SearchPage = (CurrentPage === 'SearchPage');
 
     const sidebarTransition = {
       transition: theme.transitions.create(['margin-left'], {
@@ -58,7 +52,7 @@ class Header extends Component {
         duration: theme.transitions.duration.leavingScreen,
       })
     };
-    if (props.sidebarOpen) {
+    if (props.sidebarOpen && CurrentPage === 'SearchPage') {
       sidebarTransition.marginLeft = 350;
     }
 
@@ -72,7 +66,7 @@ class Header extends Component {
                   <MenuIcon className={classes.icon}/>
                 </IconButton>
                 <Typography variant="title" className={classes.title}>
-                  <Link to='/' className={classes.home}>Marketplace</Link>
+                  <Link to='/' onClick={() => this.props.history.push('/')} className={classes.home}>Marketplace</Link>
                 </Typography>
                 <AccountsUIWrapper/>
               </Grid>
@@ -86,13 +80,10 @@ class Header extends Component {
                   <Faker/>
                 </Grid>
                 <Grid item>
-                  {SearchPage && <Sorter sort={props.sort} handleChange={props.handleChange}/>}
-                </Grid>
-                <Grid item>
                   {Meteor.user() && <Form/>}
                 </Grid>
                 <Grid item>
-                  <Link to='/profile/Offers/YourOffers' onClick={this.handleClick}>
+                  <Link to='/profile/Offers/YourOffers'>
                     <IconButton>
                       <AccountCircle className={classes.icon}/>
                     </IconButton>
@@ -104,8 +95,11 @@ class Header extends Component {
         </AppBar>
         <Sidebar
           filter={props.filter}
+          sort={props.sort}
+          view={props.view}
+          handleChange={props.handleChange}
           CurrentPage={CurrentPage}
-          sidebarOpen={props.sidebarOpen}
+          sidebarOpen={props.sidebarOpen && CurrentPage === 'SearchPage'}
           handleFilterChange={props.handleFilterChange}/>
         <div style={sidebarTransition} className={classes.children}>
           {children}

@@ -1,10 +1,11 @@
-import React, {Component, Fragment} from 'react';
-import {withTheme, withStyles} from '@material-ui/core/styles';
+import React, {Component} from 'react';
+import {withStyles} from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import RangeSlider from './RangeSlider';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import MoneyIcon from '@material-ui/icons/AttachMoney';
 
 const styles = theme => ({
   root: {
@@ -15,7 +16,15 @@ const styles = theme => ({
     textAlign: 'center',
   },
   input: {
-    fontSize: 20,
+    fontSize: 16,
+    paddingBottom: 3,
+  },
+  header: {
+    fontSize: 18
+  },
+  title:{
+    display: 'flex',
+
   }
 });
 
@@ -45,10 +54,13 @@ class PriceRange extends Component {
   render() {
     const {classes} = this.props;
     return (
-      <Fragment>
-        <Typography>
-          Price Range:
-        </Typography>
+      <div>
+        <div className={classes.title}>
+          <MoneyIcon/>
+          <Typography variant={"headline"} className={classes.header}>
+            Price Range:
+          </Typography>
+        </div>
         <div className={classes.root}>
           <TextField
             id='min'
@@ -64,7 +76,7 @@ class PriceRange extends Component {
               classes: {input: classes.input}
             }}
           />
-          <Typography style={{paddingTop: 10, fontWeight:'bold'}}>
+          <Typography style={{paddingTop: 10, fontWeight: 'bold'}}>
             &nbsp; - &nbsp;
           </Typography>
           <TextField
@@ -83,7 +95,7 @@ class PriceRange extends Component {
             }}
           />
         </div>
-      </Fragment>
+      </div>
     )
   }
 }

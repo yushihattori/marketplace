@@ -10,8 +10,7 @@ import {Meteor} from 'meteor/meteor';
 import PlusIcon from '@material-ui/icons/AddCircleOutline';
 import PageSteps from './PageSteps';
 import ItemDetailsPage from './Pages/ItemDetailsPage';
-import theme from '../../../Theme';
-import Files from "../../../../api/Files";
+import ImagesUploadPage from './Pages/ImagesUploadPage'
 
 const styles = theme => ({
   button: {
@@ -65,10 +64,7 @@ class Form extends Component {
       details: '',
       role: '',
       allowCounterOffers: true,
-      image: '',
-      imageId: '',
     },
-    image: '',
   };
 
   handleOpen = () => {
@@ -105,25 +101,22 @@ class Form extends Component {
     })
   };
 
-  handleUpload = event => {
-    const file = event.currentTarget.files[0];
-    this.setState({image: file});
-  };
-
   handleCreateListing = () => {
-    const upload = Files.insert({
-      file: this.state.image,
-      streams: 'dynamic',
-      chunkSize: 'dynamic',
-    }, false);
-    upload.start();
-    const imageId = upload.config.fileId;
+    const images = [
+      "https://static.vecteezy.com/system/resources/previews/000/095/282/non_2x/unique-polygon-background-vector.jpg",
+      "https://cmkt-image-prd.global.ssl.fastly.net/0.1.0/ps/145992/580/386/m1/fpnw/wm0/scrn1-.jpg?1405865759&s=f655a1a737238b0bf932b5a82c4c56db",
+      "https://cmkt-image-prd.global.ssl.fastly.net/0.1.0/ps/188520/580/386/m1/fpnw/wm0/1-.jpg?1411214949&s=2b1423d7ab11d821a8dc19b634c57bd3",
+      "https://image.freepik.com/free-vector/orange-polygon-background_1407-134.jpg",
+    ];
+    const randomImage = Math.round(Math.random() * 3);
+
     this.setState({
       ...this.state, form: {
         ...this.state.form,
         price: parseFloat(this.state.form.price),
         stock: parseFloat(this.state.form.stock),
-        imageId: imageId,
+        CardImage: images[randomImage],
+        BannerImage: images[randomImage],
       }
     }, () => Meteor.call('listings.insert', this.state.form));
     this.handleClose()
@@ -132,7 +125,6 @@ class Form extends Component {
   getStepContent = page => {
     const props = {
       form: this.state.form,
-      image: this.state.image,
       handleChange: this.handleChange,
       handleNumberChange: this.handleNumberChange,
       handleChecked: this.handleChecked,
@@ -146,7 +138,9 @@ class Form extends Component {
           />
         );
       case 1:
-        return 'Page 2';
+        return (
+          <ImagesUploadPage/>
+        );
       case 2:
         return 'Page 3';
       default:

@@ -2,8 +2,8 @@ import React, {Component} from 'react';
 import {withStyles} from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import {withTracker} from 'meteor/react-meteor-data';
-import Messages from '../../../../../api/Messages';
-import Listings from "../../../../../api/Listings";
+import Messages from '../../../../../api/Messages/Messages';
+import Listings from "../../../../../api/Listings/Listings";
 import Loading from '../../../../Components/Loading';
 import Typography from '@material-ui/core/Typography'
 import Grid from '@material-ui/core/Grid';
@@ -49,7 +49,6 @@ class OfferMessage extends Component {
 
   componentDidMount() {
     this.scrollToBottom();
-    // setTimeout(() => {this.setState({TimedOut: true})}, 00);
   };
 
   componentDidUpdate() {
@@ -67,7 +66,7 @@ class OfferMessage extends Component {
 
   render() {
 
-    // Currently offer messagae returns all messages in that offer. Need to limit it and when you scroll up it shows more or less
+    // Currently offer message returns all messages in that offer. Need to limit it and when you scroll up it shows more or less
     const {formatDate, state} = this;
     const {classes, messages, loading, listing, PriceOfferId, QtyOfferId} = this.props;
     const rejected = {

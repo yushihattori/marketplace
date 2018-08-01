@@ -5,10 +5,10 @@ import Grid from '@material-ui/core/Grid'
 import List from '@material-ui/core/List';
 import {withTracker} from 'meteor/react-meteor-data';
 import {Meteor} from 'meteor/meteor';
-import Listings from "../../../../../api/Listings";
+import Listings from "../../../../../api/Listings/Listings";
 import ItemCard from './ItemCard';
 import ExpandableOffer from './ExpandableOffer';
-import Offers from '../../../../../api/Offers';
+import Offers from '../../../../../api/Offers/Offers';
 import Loading from '../../../../Components/Loading';
 
 const styles = theme => (

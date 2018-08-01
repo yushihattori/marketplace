@@ -23,7 +23,7 @@ const styles = theme => (
 
 class SearchPage extends Component {
   state = {
-    items: Array.from({length: 10})
+    items: Array.from({length: 20})
   };
 
   componentDidMount() {
@@ -31,7 +31,7 @@ class SearchPage extends Component {
   };
 
   componentWillReceiveProps() {
-    this.setState({items: Array.from({length: 10})})
+    this.setState({items: Array.from({length: 20})})
   }
 
   fetchData = () => {
@@ -54,7 +54,6 @@ class SearchPage extends Component {
   render() {
     const {props, state} = this;
     const {classes} = this.props;
-
     return (
       <div>
         <div className={classes.toolbar}/>
@@ -73,6 +72,7 @@ class SearchPage extends Component {
                 input={props.input}
                 sort={props.sort}
                 filter={props.filter}
+                view={props.view}
                 limit={state.items.length}
               />
             </InfiniteScroll>

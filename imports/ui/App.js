@@ -11,14 +11,12 @@ import ProfilePage from './Pages/ProfilePage/ProfilePage'
 class App extends Component {
   state = {
     sort: {createdAt: -1},
+    view: 'Card',
     input: '',
     CurrentPage: '',
     sidebarOpen: false,
     filter: {
-      priceRange: {
-        min: 0,
-        max: 1000,
-      },
+      priceRange:{},
       BuyerSeller: 'both',
     }
   };

@@ -3,13 +3,19 @@ import {withStyles} from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import CheckIcon from '@material-ui/icons/Check'
 import Typography from "@material-ui/core/Typography";
+import HourglassIcon from '@material-ui/icons/HourglassEmpty';
 
 const styles = theme => (
   {
-    check: {
+    hourglass: {
       width: 30,
       height: 30,
       color: 'grey',
+    },
+    check: {
+      width: 30,
+      height: 30,
+      color: 'green',
     },
     checkLabel: {
       fontSize: 16,
@@ -31,17 +37,17 @@ class UserAgreeIcon extends Component {
     return (
       OfferUserAgree !== undefined ?
         <div className={classes.checkContainer}>
-          <CheckIcon style={{color: OfferUserAgree ? 'green' : ''}} className={classes.check}/>
-          <Typography style={{color: OfferUserAgree ? 'green' : ''}} className={classes.checkLabel}>
+          {OfferUserAgree ? <CheckIcon className={classes.check}/> : <HourglassIcon className={classes.hourglass}/>}
+          <Typography className={classes.checkLabel}>
             {name}
           </Typography>
         </div> : ListingUserAgree !== undefined ?
         <div className={classes.checkContainer}>
-          <CheckIcon style={{color: ListingUserAgree ? 'green' : ''}} className={classes.check}/>
-          <Typography style={{color: ListingUserAgree ? 'green' : ''}} className={classes.checkLabel}>
+          {ListingUserAgree ? <CheckIcon className={classes.check}/> : <HourglassIcon className={classes.hourglass}/>}
+          <Typography className={classes.checkLabel}>
             {name}
           </Typography>
-        </div> : <div>NEED OFFERUSERAGREE OR LISTINGUSERAGREE</div>
+        </div> : <div>Error</div>
 
     )
   }

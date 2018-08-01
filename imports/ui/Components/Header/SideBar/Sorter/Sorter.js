@@ -1,19 +1,29 @@
-import React, {Fragment, Component} from 'react';
+import React, {Component} from 'react';
 import Button from '@material-ui/core/Button';
 import SortIcon from '@material-ui/icons/Sort';
 import {withTheme, withStyles} from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import theme from '../../Theme'
+import theme from '../../../../Theme'
+import Typography from '@material-ui/core/Typography'
 
 const styles = theme => ({
-  root: {
+  button: {
     fontSize: 15,
+    color: 'black',
   },
   smallIcon: {
     fontSize: 25,
+    paddingRight: 3,
   },
+  header: {
+    fontSize: 18,
+  },
+  title: {
+    display: 'flex',
+    alignItems: 'center'
+  }
 });
 
 const options = [
@@ -73,20 +83,22 @@ class Sorter extends Component {
 
   render() {
     const {classes} = this.props;
-    const {anchorEl} = this.state;
-
+    const {anchorEl, selectedIndex} = this.state;
     return (
-      <Fragment>
-        <Button
-          size='small'
-          className={classes.root}
-          onClick={this.handleClick}
-          // aria-label="More"
-          // aria-owns={anchorEl ? 'long-menu' : null}
-          // aria-haspopup="true"
-        >
+      <div>
+        <div className={classes.title}>
           <SortIcon className={classes.smallIcon}/>
-          Sort
+          <Typography variant={"headline"} className={classes.header}>
+            Sort by:
+          </Typography>
+        </div>
+        <Button
+          variant={"outlined"}
+          size='small'
+          className={classes.button}
+          onClick={this.handleClick}
+        >
+          {options[selectedIndex].label}
         </Button>
         <Menu
           anchorEl={anchorEl}
@@ -104,7 +116,7 @@ class Sorter extends Component {
             </MenuItem>
           ))}
         </Menu>
-      </Fragment>
+      </div>
     )
   }
 }

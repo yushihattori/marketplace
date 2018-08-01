@@ -118,6 +118,7 @@ class Bid extends Component {
         PriceOfferId: 'id#',
         QtyOfferId: 'id#',
         Message: state.Message,
+        allowCounterOffers: props.allowCounterOffers
       };
       Meteor.call('offers.insert', values, (error, result) => {
         const OfferId = result;

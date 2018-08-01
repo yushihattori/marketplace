@@ -1,4 +1,4 @@
-import React, {Component, Fragment} from 'react';
+import React, {Component} from 'react';
 import {withTheme, withStyles} from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
@@ -9,27 +9,20 @@ const styles = theme => ({});
 
 
 class Filter extends Component {
-  state = {
-    filter: this.props.filter,
-  };
-
   render() {
-    const {classes} = this.props;
-    const filter = this.props.filter;
+    const {filter, classes} = this.props;
 
     return (
-      <Fragment>
-        <div>
-          <BuyerSeller
-            BuyerSeller={filter.BuyerSeller}
-            handleFilterChange={this.props.handleFilterChange}
-          />
-          <PriceRange
-            priceRange={filter.priceRange}
-            handleFilterChange={this.props.handleFilterChange}
-          />
-        </div>
-      </Fragment>
+      <div>
+        <BuyerSeller
+          BuyerSeller={filter.BuyerSeller}
+          handleFilterChange={this.props.handleFilterChange}
+        />
+        <PriceRange
+          priceRange={filter.priceRange}
+          handleFilterChange={this.props.handleFilterChange}
+        />
+      </div>
     )
   }
 }

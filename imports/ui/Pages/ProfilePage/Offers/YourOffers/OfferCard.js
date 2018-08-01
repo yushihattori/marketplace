@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {withStyles} from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import {withTracker} from 'meteor/react-meteor-data';
-import Listings from "../../../../../api/Listings";
+import Listings from "../../../../../api/Listings/Listings";
 import Loading from '../../../../Components/Loading';
 import Typography from '@material-ui/core/Typography'
 import MenuItem from '@material-ui/core/MenuItem'

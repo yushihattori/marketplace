@@ -82,6 +82,10 @@ const offersSchema = new SimpleSchema({
   DealEnded: {
     type: Boolean,
     label: 'If the deal has been ended by both users agreeing or someone ends the deal'
+  },
+  allowCounterOffers: {
+    type: Boolean,
+    label: 'Based on whether the listing allowed counter offers or not'
   }
 });
 

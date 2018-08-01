@@ -49,7 +49,6 @@ class ItemCard extends Component {
           button
           divider
           selected={ClickedId === _id}
-          style={{backgroundImage: `url(${item.BannerImage})`, backgroundSize: "100% 130px"}}
           onClick={() => {
             handleClick("YourListingsClickedId", _id);
             closeAllExpanded();
@@ -59,14 +58,15 @@ class ItemCard extends Component {
           <Typography className={classes.itemname}>
             {itemname}
           </Typography>
-          <div className={classes.Icon}>
-            <Icon color={NumberOfOffers > 0 ? "primary" : "action"} className={classes.Offers}>
+          {NumberOfOffers > 0 &&
+            <div className={classes.Icon}>
+            <Icon color={"primary"} className={classes.Offers}>
               <LensIcon/>
               <div className={classes.OfferNumber}>
                 {NumberOfOffers}
               </div>
             </Icon>
-          </div>
+          </div>}
         </MenuItem> : <Loading/>
     )
   }
