@@ -5,11 +5,9 @@ import queryString from 'query-string';
 import Listings from "../../../api/Listings/Listings";
 import {withTracker} from 'meteor/react-meteor-data';
 import Loading from '../../Components/Loading';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper'
 import Fade from '@material-ui/core/Fade'
 import Bid from './Bid'
+import ItemDetails from './ItemDetails';
 
 const styles = theme => (
   {
@@ -18,13 +16,8 @@ const styles = theme => (
       display: 'flex',
       position: 'relative',
       justifyContent: 'center',
-    },
-    form: {
-      width: 800,
-      right: 100,
-      position: 'absolute',
-      top: 400,
-      opacity: 0.9,
+      // width: '100vw',
+      height: '93.5vh',
     },
     image: {
       width: '100%',
@@ -56,12 +49,13 @@ class ItemPage extends Component {
         <Fade in={true} timeout={200}>
           <div className={classes.root}>
             <img src={item.BannerImage} className={classes.image}/>
-            <div className={classes.form}>
-              <Bid
-                {...item}
-                history={history}
-              />
-            </div>
+            <ItemDetails
+              item={item}
+            />
+            <Bid
+              {...item}
+              history={history}
+            />
           </div>
         </Fade> :
         <Loading/>

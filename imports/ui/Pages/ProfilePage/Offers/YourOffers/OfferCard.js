@@ -5,9 +5,9 @@ import {withTracker} from 'meteor/react-meteor-data';
 import Listings from "../../../../../api/Listings/Listings";
 import Loading from '../../../../Components/Loading';
 import Typography from '@material-ui/core/Typography'
-import MenuItem from '@material-ui/core/MenuItem'
-import theme from '../../../../Theme'
 import UserAgreeIcon from '../Components/UserAgreeIcon'
+import ListItem from '@material-ui/core/ListItem'
+import Grid from '@material-ui/core/Grid';
 
 const styles = () => (
   {
@@ -16,36 +16,65 @@ const styles = () => (
       flexDirection: 'column',
       alignItems: 'flex-start',
       position: 'relative',
-      height: 100,
+      width: '100%',
     },
-    itemname: {
+    ItemName: {
+      fontSize: 22,
+    },
+    Role: {
       fontSize: 19,
-      fontWeight: 'bold',
-    },
-    status: {
-      position: 'absolute',
-      right: 5,
-      top: 5,
-      fontSize: 15,
-      display: 'flex',
     },
     CurrentOffer: {
       fontSize: 18,
     },
-    message: {
-      fontSize: 16,
-      color: 'black',
+    Offer: {
+      fontSize: 18,
     },
-    OfferChange: {
-      fontSize: 16,
-      fontStyle: 'italic',
+    OfferContainer: {
+      outline: '1px solid lightGrey',
+      width: '95%',
+      paddingRight: 10,
+      paddingLeft: 10,
+      marginTop: 10,
     },
-    primary: {
-      color: theme.palette.primary.main
+    MessageContainer: {
+      display: 'flex',
+      alignItems: 'center',
+      alignJustify: 'space-between',
+      marginTop: 10,
+      marginBottom: -5,
+      paddingBottom: -5,
+    },
+    MessageUser: {
+      fontSize: 18,
+      marginRight: 8,
+    },
+    created: {
+      fontSize: 13,
+    },
+    Message: {
+      fontSize: 18,
+    },
+    Image: {
+      width: 80,
+      height: 80,
+      borderRadius: 10,
+      overflow: 'hidden',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginRight: 15,
+    },
+    header: {
+      display: 'flex',
+      alignItems: 'center'
+    },
+    Icons: {
+      display: 'flex',
+      marginTop: 15,
     },
     AgreeStyle: {
       color: 'green',
-      fontStyle: "italic"
     }
   }
 );
@@ -78,47 +107,70 @@ class OfferCard extends Component {
     });
     return (
       !loading ?
-        <MenuItem
+        <ListItem
           button
           divider
           selected={this.props.OfferId === _id}
           className={classes.listItem}
           onClick={() => props.handleClick(offer._id)}
         >
-          <div className={classes.status}>
-            <UserAgreeIcon
-              ListingUserAgree={ListingUserAgree}
-              name={username}
-            />
-            <UserAgreeIcon
-              OfferUserAgree={OfferUserAgree}
-              name={"You"}
-            />
+          <div className={classes.header}>
+            <div className={classes.Image}>
+              <img src={listing.CardImage}/>
+            </div>
+            <div>
+              <Typography variant={"headline"} className={classes.ItemName}>
+                {listing.itemname}
+              </Typography>
+              <Typography variant={"body1"} className={classes.Role}>
+                {listing.role === "seller" && `Sold by ${listing.username}`}
+                {listing.role === "buyer" && `Bought by ${listing.username}`}
+              </Typography>
+            </div>
           </div>
-          <Typography className={classes.itemname}>
-            {listing.itemname}
-          </Typography>
-          <Typography className={classes.CurrentOffer}>
-            {`Current Offer: `}
-            <span className={classes.primary}>{`${QtyOffer} ${listing.unit}s`}</span>
-            {` at `}
-            <span className={classes.primary}>{`$${PriceOffer.toFixed(2)}`}</span>
-            {` per ${listing.unit}`}
-          </Typography>
-          <div>
-            <Typography className={classes.message}>
-              {`${MessageUser}: `}
-              {Message ?
-                Message.substr(0, 4) === "#OUA" ?
-                  <span className={classes.AgreeStyle}>{Message.substr(4)}</span> :
-                  `${Message.substr(0, 100)} ${Message.length > 100 ? "..." : ''}` : ''
-              }
+          <Grid container alignItems={"center"} justify={"space-between"} className={classes.OfferContainer}>
+            <Grid item xs={9}>
+              <Typography variant={"body2"} className={classes.CurrentOffer}>
+                Current Offer:
+              </Typography>
+              <Typography variant={"body1"} className={classes.Offer}>
+                {`Price: $${PriceOffer.toFixed(2)}`}
+                &nbsp; &nbsp; &nbsp;
+                {`Qty: ${QtyOffer} ${listing.unit}${QtyOffer > 0 && "s"}`}
+              </Typography>
+            </Grid>
+            <Grid item xs={3} className={classes.Icons}>
+              <UserAgreeIcon
+                ListingUserAgree={ListingUserAgree}
+                name={username}
+              />
+              <UserAgreeIcon
+                OfferUserAgree={OfferUserAgree}
+                name={"You"}
+              />
+            </Grid>
+          </Grid>
+          <div className={classes.MessageContainer}>
+            <Typography variant={"subheading"} className={classes.MessageUser}>
+              {MessageUser}
             </Typography>
-            <Typography color={"primary"} className={classes.OfferChange}>
-              {OfferChangeRender(OfferChange, PriceOffer, QtyOffer, listing.unit)}
+            <Typography className={classes.created}>
+              {created}
             </Typography>
           </div>
-        </MenuItem> : <Loading/>
+          <Typography className={classes.Message}>
+            {Message ?
+              Message.substr(0, 4) === "#OUA" ?
+                <span className={classes.AgreeStyle}>{Message.substr(4)}</span> :
+                `${Message.substr(0, 100)} ${Message.length > 100 ? "..." : ''}` : ''
+            }
+          </Typography>
+          <Typography color={"primary"} className={classes.Message}>
+            {OfferChangeRender(OfferChange, PriceOffer, QtyOffer, listing.unit)}
+          </Typography>
+        </ListItem>
+        :
+        <Loading/>
     )
   }
 }

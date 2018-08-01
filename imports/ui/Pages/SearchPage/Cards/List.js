@@ -11,6 +11,46 @@ const styles = {
   Paper: {
     margin: 15,
     padding: 10,
+    width: '75%',
+  },
+  Link: {
+    textDecoration: 'none',
+    display: 'flex',
+    justifyContent:'center',
+  },
+  ItemName: {
+    fontSize: 20,
+  },
+  Image: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 80,
+    height: 80,
+    overflow: 'hidden',
+    borderRadius: 10,
+    marginRight: 15,
+  },
+  title: {
+    display: 'flex',
+  },
+  Created: {
+    fontSize: 16
+  },
+  details: {
+    fontSize: 18,
+    color: 'black',
+  },
+  Value: {
+    fontSize: 18
+  },
+  CreatedContainer: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+  },
+  role: {
+    fontSize: 16,
+    color: 'grey',
   }
 };
 
@@ -27,26 +67,36 @@ class List extends Component {
 
     return (
       <Fade in={true} timeout={timeout}>
-        <Link to={{pathname: '/item', search: `?listingId=${item._id}`}}>
+        <Link className={classes.Link} to={{pathname: '/item', search: `?listingId=${item._id}`}}>
           <Paper className={classes.Paper}>
             <Grid container>
-              <Grid item xs={3}>
-                <Typography>
-                  {item.itemname}
-                </Typography>
+              <Grid item xs={3} className={classes.title}>
+                <div className={classes.Image}>
+                  <img src={item.CardImage}/>
+                </div>
+                <div>
+                  <Typography variant={"headline"} className={classes.ItemName}>
+                    {item.itemname}
+                  </Typography>
+                  <Typography className={classes.role}>
+                    {item.role === "seller" && `Sold by ${item.username}`}
+                    {item.role === "buyer" && `Bought by ${item.username}`}
+                  </Typography>
+                </div>
               </Grid>
-              <Grid item xs={2}>
-                <Typography>
+              <Grid item xs>
+                <Typography variant={"title"} className={classes.Value}>
                   ${item.price.toFixed(2)} per {item.unit}
                 </Typography>
-              </Grid>
-              <Grid item xs={2}>
-                <Typography>
+                <Typography variant={"title"} className={classes.Value}>
                   {item.stock.toFixed(2)} {item.unit}{item.stock > 1 && 's'} left in stock
                 </Typography>
               </Grid>
-              <Grid item xs={1}>
-                <Typography>
+              <Grid item xs={5} className={classes.details}>
+                {item.details}
+              </Grid>
+              <Grid item xs={1} className={classes.CreatedContainer}>
+                <Typography variant={"caption"} className={classes.Created}>
                   {created}
                 </Typography>
               </Grid>

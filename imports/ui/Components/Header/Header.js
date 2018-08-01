@@ -77,7 +77,7 @@ class Header extends Component {
               </Grid>
               <Grid container spacing={0} item sm={4} className={classes.item} justify='flex-end' alignItems={'center'}>
                 <Grid item>
-                  <Faker/>
+                  {/*<Faker/>*/}
                 </Grid>
                 <Grid item>
                   {Meteor.user() && <Form/>}

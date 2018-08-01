@@ -37,7 +37,7 @@ const styles = theme => ({
     marginTop: '7px',
   },
   BackButton: {
-    color: theme.palette.grey,
+    color: theme.palette.primary.main,
   },
   NextButton: {
     color: theme.palette.primary.main,
@@ -46,6 +46,12 @@ const styles = theme => ({
     position: 'absolute',
     bottom: 30,
     right: 30,
+  },
+  ResetButton: {
+    color: theme.palette.grey,
+    position: 'absolute',
+    bottom: 30,
+    left: 30,
   }
 });
 
@@ -54,7 +60,7 @@ class Form extends Component {
   state = {
     open: false,
     activeStep: 0,
-    completed: {},
+    completed: {0: false, 1: false, 2: false},
     form: {
       itemname: '',
       price: '',
@@ -64,6 +70,8 @@ class Form extends Component {
       details: '',
       role: '',
       allowCounterOffers: true,
+      CardImage: '',
+      BannerImage:'',
     },
   };
 
@@ -108,7 +116,9 @@ class Form extends Component {
       "https://cmkt-image-prd.global.ssl.fastly.net/0.1.0/ps/188520/580/386/m1/fpnw/wm0/1-.jpg?1411214949&s=2b1423d7ab11d821a8dc19b634c57bd3",
       "https://image.freepik.com/free-vector/orange-polygon-background_1407-134.jpg",
     ];
-    const randomImage = Math.round(Math.random() * 3);
+    const randomImage = Math.round(Math.random() * images.length);
+    const randomBanner = Math.round(Math.random() * images.length);
+
 
     this.setState({
       ...this.state, form: {
@@ -116,9 +126,13 @@ class Form extends Component {
         price: parseFloat(this.state.form.price),
         stock: parseFloat(this.state.form.stock),
         CardImage: images[randomImage],
-        BannerImage: images[randomImage],
+        BannerImage: images[randomBanner],
       }
-    }, () => Meteor.call('listings.insert', this.state.form));
+    }, () => {
+      const form = this.state.form
+      Meteor.call('listings.insert', form);
+      this.reset()
+    });
     this.handleClose()
   };
 
@@ -129,6 +143,7 @@ class Form extends Component {
       handleNumberChange: this.handleNumberChange,
       handleChecked: this.handleChecked,
       handleUpload: this.handleUpload,
+      pageValidate: this.pageValidate,
     };
     switch (page) {
       case 0:
@@ -139,59 +154,71 @@ class Form extends Component {
         );
       case 1:
         return (
-          <ImagesUploadPage/>
+          <ImagesUploadPage
+            {...props}
+          />
         );
       case 2:
-        return 'Page 3';
+        return 'Confirm Details';
       default:
         return 'ERROR PAGE NOT FOUND';
     }
   };
 
   handleStep = index => {
-    this.setState({activeStep: index}, this.pageValidate());
+    this.pageValidate();
+    this.setState({activeStep: index});
   };
 
   handleStepNext = () => {
-    this.state.activeStep !== 2 && this.setState({activeStep: this.state.activeStep + 1}, this.pageValidate());
+    this.pageValidate();
+    this.state.activeStep !== 2 && this.setState({activeStep: this.state.activeStep + 1});
   };
 
   handleStepBack = () => {
-    this.state.activeStep !== 0 && this.setState({activeStep: this.state.activeStep - 1}, this.pageValidate());
+    this.pageValidate();
+    this.state.activeStep !== 0 && this.setState({activeStep: this.state.activeStep - 1});
   };
 
   pageValidate = () => {
-    const {form} = this.state;
-    const {activeStep} = this.state;
+    const {itemname, price, stock, role} = this.state.form;
+    const StepOneValidated = !!itemname && !!price && !!stock && !!role;
+    this.setState({completed: {0: StepOneValidated, 1: true, 2: true}});
 
-    let validated = true;
-    if (activeStep === 0) {
-      !form.itemname && (validated = false);
-      !form.price && (validated = false);
-      !form.stock && (validated = false);
-      !form.role && (validated = false);
-    }
-    if (activeStep === 1) {
-      validated = false
-    }
-    if (activeStep === 2) {
-      validated = false
-    }
-    this.handleComplete(validated);
   };
 
-  handleComplete = (validated) => {
+  handleSubmit = (e) => {
+    const {completed} = this.state;
+    this.pageValidate();
+    if (!(completed[0] && completed[1] && completed[2])) {
+      e.stopPropagation()
+    } else {
+      this.handleCreateListing();
+    }
+  };
+
+  reset = () => {
     this.setState({
-      ...this.state, completed: {
-        ...this.state.completed, [this.state.activeStep]: validated
-      }
-    });
+      activeStep: 0,
+      completed: {0: false, 1: false, 2: false},
+      form: {
+        itemname: '',
+        price: '',
+        stock: '',
+        unit: 'ton',
+        currency: 'USD',
+        details: '',
+        role: '',
+        allowCounterOffers: true,
+      },
+    })
   };
-
 
   render() {
     const {classes} = this.props;
-    const {activeStep} = this.state;
+    const {activeStep, completed} = this.state;
+    const disabled = !(completed[0] && completed[1] && completed[2])
+
     return (
       <div>
         {/*New Listing Button*/}
@@ -223,27 +250,40 @@ class Form extends Component {
                 activeStep={this.state.activeStep}
                 completed={this.state.completed}
               />
-
               <div>
                 {this.getStepContent(activeStep)}
               </div>
-
+              <Button
+                variant='contained'
+                onClick={this.reset}
+                className={classes.ResetButton}
+              >
+                Reset
+              </Button>
               <div className={classes.ButtonPosition}>
-                {/*Upload form*/}
-                <Button color="primary" variant="outlined" onClick={this.handleCreateListing}>
-                  TEMPORARY UPLOAD LISTING
-                </Button>
-
-                <Button variant='contained' disabled={activeStep === 0} onClick={this.handleStepBack}
-                        className={classes.BackButton}>
+                <Button
+                  variant='contained'
+                  disabled={activeStep === 0}
+                  onClick={this.handleStepBack}
+                  className={classes.BackButton}
+                >
                   Back
                 </Button>
-                <Button variant='contained' disabled={activeStep === 2} onClick={this.handleStepNext}
-                        className={classes.NextButton}>
+                <Button
+                  variant='contained'
+                  disabled={activeStep === 2}
+                  onClick={this.handleStepNext}
+                  className={classes.NextButton}
+                >
                   Next
                 </Button>
-                <Button variant='contained' onClick={this.handleComplete} style={{color: 'black'}}>
-                  Complete Step
+                <Button
+                  disabled={disabled}
+                  color="primary"
+                  variant="outlined"
+                  onClick={this.handleSubmit}
+                >
+                  Submit
                 </Button>
               </div>
             </div>

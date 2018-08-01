@@ -19,27 +19,21 @@ const styles = {
 class Cards extends Component {
 
   renderCards() {
-    const {listings, view} = this.props;
+    const {listings, view, classes} = this.props;
     return (
       listings.map(item => {
           switch (view) {
             case "Card":
               return (
-                <Grid item key={item._id}>
-                  <NormalCard key={item._id} item={item}/>
-                </Grid>
+                <NormalCard key={item._id} item={item}/>
               );
             case "Long Card":
               return (
-                <Grid item key={item._id}>
-                  <LongCard key={item._id} item={item}/>
-                </Grid>
+                <LongCard key={item._id} item={item}/>
               );
             case "List":
               return (
-                <Grid item key={item._id}>
-                  <List key={item._id} item={item}/>
-                </Grid>
+                <List key={item._id} item={item}/>
               )
           }
         }

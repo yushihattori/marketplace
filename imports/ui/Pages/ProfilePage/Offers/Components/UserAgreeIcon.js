@@ -19,6 +19,7 @@ const styles = theme => (
     },
     checkLabel: {
       fontSize: 16,
+      whiteSpace: 'nowrap'
     },
     checkContainer: {
       marginTop: -8,

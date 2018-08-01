@@ -14,6 +14,7 @@ const styles = {
   title: {
     fontSize: 16,
     textDecoration: 'none',
+    height: 40,
   },
   subheader: {
     fontSize: 14,
@@ -21,6 +22,7 @@ const styles = {
   },
   content: {
     margin: 8,
+    height: 130,
   },
   media: {
     width: '100%',
@@ -97,7 +99,8 @@ class NormalCard extends Component {
 
               <div>
                 <Typography variant='body1' className={classes.seller}>
-                  Sold by {item.username}
+                  {item.role === "seller" && `Sold by ${item.username}`}
+                  {item.role === "buyer" && `Bought by ${item.username}`}
                 </Typography>
               </div>
               <div>

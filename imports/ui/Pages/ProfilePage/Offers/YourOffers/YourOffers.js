@@ -30,7 +30,6 @@ const styles = theme => (
     list: {
       paddingTop: 10,
       width: '100%',
-      maxWidth: 500,
       maxHeight: '95%',
       overflow: 'auto',
     },

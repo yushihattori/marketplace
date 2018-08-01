@@ -66,7 +66,7 @@ class SearchPage extends Component {
               dataLength={this.state.items.length}
               next={this.fetchData}
               hasMore={true}
-              loader={<h4>Loading...</h4>}
+              loader={<h4>{' '}</h4>}
             >
               <Cards
                 input={props.input}

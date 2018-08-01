@@ -3,9 +3,8 @@ import {withStyles} from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Loading from '../../../../Components/Loading';
 import Typography from '@material-ui/core/Typography'
-import Icon from '@material-ui/core/Icon'
-import LensIcon from '@material-ui/icons/Lens'
-import MenuItem from '@material-ui/core/MenuItem'
+import ListItem from '@material-ui/core/ListItem'
+import Grid from '@material-ui/core/Grid';
 
 const styles = theme => (
   {
@@ -14,25 +13,59 @@ const styles = theme => (
       flexDirection: 'column',
       alignItems: 'flex-start',
       position: 'relative',
-      height: 100,
     },
-    itemname: {
-      fontSize: 19,
-      fontWeight: 'bold',
+    ItemName: {
+      fontSize: 22,
     },
-    Offers: {
-      position: 'relative'
+    Image: {
+      width: 80,
+      height: 80,
+      borderRadius: 10,
+      overflow: 'hidden',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginRight: 15,
     },
-    OfferNumber: {
-      position: 'absolute',
-      color: 'white',
-      top: -9,
-      left: 6.9,
-      fontSize: 17
+    header: {
+      display: 'flex',
+      alignItems: 'center'
     },
-    Icon: {
-      position: 'absolute',
-      right: 10,
+    role: {
+      fontSize: 16
+    },
+    CreatedAt: {
+      fontSize: 16
+    },
+    values: {
+      width: '100%',
+      outline: '1px solid lightGrey',
+      paddingTop: 10,
+      paddingBottom: 10,
+      marginTop: 15,
+    },
+    Value: {
+      fontSize: 18,
+      marginTop: 3,
+    },
+    ValueLabel: {
+      fontSize: 18,
+    },
+    GridItem: {
+      display: 'flex',
+      alignItems: 'center',
+    },
+    OffersContainer: {
+      display: 'flex',
+      justifyContent: 'center',
+      width: '100%',
+      marginTop: 10,
+    },
+    OffersLabel: {
+      fontSize: 18
+    },
+    NumberOfOffers: {
+      fontSize: 18
     }
   }
 );
@@ -40,12 +73,19 @@ const styles = theme => (
 class ItemCard extends Component {
   render() {
     const {classes, loading, item, handleClick, ClickedId, listingOffers, closeAllExpanded} = this.props;
-    const {_id, itemname} = item;
+    const {_id, itemname, role, CardImage, createdAt, price, stock,} = item;
     const NumberOfOffers = listingOffers ? listingOffers.length : 0;
+    const created = createdAt.toLocaleString([], {
+      month: '2-digit',
+      day: '2-digit',
+      year: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
 
     return (
       !loading ?
-        <MenuItem
+        <ListItem
           button
           divider
           selected={ClickedId === _id}
@@ -55,19 +95,50 @@ class ItemCard extends Component {
           }}
           className={classes.listItem}
         >
-          <Typography className={classes.itemname}>
-            {itemname}
-          </Typography>
-          {NumberOfOffers > 0 &&
-            <div className={classes.Icon}>
-            <Icon color={"primary"} className={classes.Offers}>
-              <LensIcon/>
-              <div className={classes.OfferNumber}>
-                {NumberOfOffers}
-              </div>
-            </Icon>
-          </div>}
-        </MenuItem> : <Loading/>
+          <div className={classes.header}>
+            <div className={classes.Image}>
+              <img src={CardImage}/>
+            </div>
+            <div>
+              <Typography variant={"headline"} className={classes.ItemName}>
+                {itemname}
+              </Typography>
+              <Typography variant={"caption"} className={classes.role}>
+                {role === 'seller' && "Selling"}
+                {role === 'buyer' && "Buying"}
+              </Typography>
+              <Typography variant={"body1"} className={classes.CreatedAt}>
+                {`Posted ${created}`}
+              </Typography>
+            </div>
+          </div>
+          <Grid container justify={"space-around"} className={classes.values}>
+            <Grid item className={classes.GridItem}>
+              <Typography variant={"title"} className={classes.ValueLabel}>
+                {`Listing price:`} &nbsp;
+              </Typography>
+              <Typography color={"primary"} className={classes.Value}>
+                {price}
+              </Typography>
+            </Grid>
+            <Grid item className={classes.GridItem}>
+              <Typography variant={"title"} className={classes.ValueLabel}>
+                {`Total in stock:`} &nbsp;
+              </Typography>
+              <Typography color={"primary"} className={classes.Value}>
+                {stock}
+              </Typography>
+            </Grid>
+          </Grid>
+          <div className={classes.OffersContainer}>
+            <Typography className={classes.OffersLabel}>
+              {`Number of Offers:`} &nbsp;
+            </Typography>
+            <Typography color={"primary"} className={classes.NumberOfOffers}>
+              {NumberOfOffers}
+            </Typography>
+          </div>
+        </ListItem> : <Loading/>
     )
   }
 }

@@ -89,7 +89,8 @@ class LongCard extends Component {
 
               <div>
                 <Typography variant='body1' className={classes.seller}>
-                  Sold by {item.username}
+                  {item.role === "seller" && `Sold by ${item.username}`}
+                  {item.role === "buyer" && `Bought by ${item.username}`}
                 </Typography>
               </div>
               <div>

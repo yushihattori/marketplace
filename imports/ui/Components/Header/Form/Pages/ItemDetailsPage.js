@@ -91,7 +91,7 @@ class ItemDetailsPage extends Component {
   render() {
 
     const {props} = this;
-    const {form, classes} = this.props;
+    const {form, classes, pageValidate} = this.props;
 
     return (
       <div>
@@ -139,6 +139,7 @@ class ItemDetailsPage extends Component {
                 helperText='Give a descriptive name'
                 margin='normal'
                 autoFocus={true}
+                onBlur={pageValidate}
                 InputProps={{classes: {input: classes.textFieldInput}}}
                 InputLabelProps={{shrink: true, className: classes.textFieldLabel}}
                 FormHelperTextProps={{className: classes.textFieldHelper}}
@@ -160,6 +161,7 @@ class ItemDetailsPage extends Component {
                 placeholder='Stock amount'
                 helperText='Amount of stock available'
                 margin='normal'
+                onBlur={pageValidate}
                 InputProps={{classes: {input: classes.textFieldInput}}}
                 InputLabelProps={{shrink: true, className: classes.textFieldLabel}}
                 FormHelperTextProps={{className: classes.textFieldHelper}}
@@ -178,6 +180,7 @@ class ItemDetailsPage extends Component {
                 value={form.unit}
                 onChange={props.handleChange('unit')}
                 margin='normal'
+                onBlur={pageValidate}
                 InputProps={{classes: {input: classes.textFieldInput}}}
                 InputLabelProps={{shrink: true, className: classes.textFieldLabel}}
                 FormHelperTextProps={{className: classes.textFieldHelper}}
@@ -209,6 +212,7 @@ class ItemDetailsPage extends Component {
                 placeholder='Price'
                 helperText='Price of item per unit'
                 margin='normal'
+                onBlur={pageValidate}
                 InputProps={{
                   classes: {input: classes.textFieldInput},
                   startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -229,6 +233,7 @@ class ItemDetailsPage extends Component {
                 value={form.currency}
                 onChange={props.handleChange('currency')}
                 margin='normal'
+                onBlur={pageValidate}
                 InputProps={{classes: {input: classes.textFieldInput}}}
                 InputLabelProps={{shrink: true, className: classes.textFieldLabel}}
                 FormHelperTextProps={{className: classes.textFieldHelper}}
@@ -273,6 +278,7 @@ class ItemDetailsPage extends Component {
                 value={form.details}
                 placeholder='Give additional details such as quality, weight, etc...'
                 margin="normal"
+                onBlur={pageValidate}
                 onChange={props.handleChange('details')}
                 InputProps={{classes: {input: classes.textFieldInput}}}
                 InputLabelProps={{shrink: true, className: classes.textFieldLabel}}

@@ -16,7 +16,10 @@ const styles = theme => (
   {
     form: {
       padding: 30,
-      width: '100%',
+      width: 800,
+      position: 'absolute',
+      bottom: 50,
+      opacity: 0.9,
     },
     textField: {
       width: 250,
@@ -129,7 +132,7 @@ class Bid extends Component {
           OfferId: OfferId,
         };
         const itemId = props._id;
-        Meteor.call('messages.insert', Message, itemId,(error, result) => {
+        Meteor.call('messages.insert', Message, itemId, (error, result) => {
           Meteor.call('offer.update-price', OfferId, result, Price);
           Meteor.call('offer.update-qty', OfferId, result, Qty);
         });
@@ -144,94 +147,92 @@ class Bid extends Component {
     const {props, state, handleChange, handleConfirmation, handleValueChange, handleCheck, handleNumberChange, handleSubmit, handleBlur} = this;
     const {classes} = this.props;
     return (
-      <div>
-        <Paper square className={classes.form}>
-          <Grid container justify={"flex-start"} spacing={24} alignItems={"flex-start"} direction={'row'}>
-            <Grid item xs={12}>
-              <Typography variant={"title"} className={classes.Title}>
-                Send Offer
-              </Typography>
-            </Grid>
-            <Grid item>
-              <TextField
-                id={'qty'}
-                label={state.QtyError ? "Error: Value too large" : "Quantity:"}
-                error={state.QtyError || state.QtyRequired}
-                value={state.Qty}
-                onChange={handleNumberChange('Qty')}
-                fullWidth
-                onBlur={handleBlur}
-                className={classes.textField}
-                InputProps={{
-                  classes: {input: classes.input},
-                  endAdornment:
-                    <InputAdornment
-                      position="end"
-                      className={classes.InputAdornment}>{props.unit}{state.Qty > 1 && 's'}
-                    </InputAdornment>,
-                }}
-                InputLabelProps={{shrink: true,}}
-              />
-            </Grid>
-            <Grid item>
-              <TextField
-                id={'price'}
-                label={state.PriceChangeable ? `Counteroffer Price:` : `Price per ${props.unit}:`}
-                value={state.Price}
-                error={state.PriceRequired}
-                onChange={handleNumberChange('Price')}
-                fullWidth
-                onBlur={handleBlur}
-                className={classes.textField}
-                InputLabelProps={{shrink: true,}}
-                disabled={!state.PriceChangeable}
-                InputProps={{
-                  classes: {input: classes.input},
-                  startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                }}
-              />
-            </Grid>
-            <Grid container item className={classes.checkbox}>
-              {props.allowCounterOffers
-                ?
-                <FormControlLabel
-                  control={<Checkbox checked={!state.PriceChangeable} color={"primary"} onChange={handleCheck}/>}
-                  label={"Use Listing Price"}
-                />
-                :
-                <Typography color={"primary"} className={classes.Counteroffer}>Counteroffers not available</Typography>
-              }
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                id='Message'
-                label='Message'
-                multiline
-                rows="5"
-                value={state.Message}
-                placeholder='Send a message to ask questions, give additional info, or to set up a line of communication.'
-                onChange={handleChange('Message')}
-                fullWidth
-                InputProps={{classes: {input: classes.input}}}
-                InputLabelProps={{shrink: true}}
-              />
-            </Grid>
-            <Grid container item>
-              <Button variant={"outlined"} color={"primary"} disabled={state.ClickAndConfirm} onClick={handleSubmit}>
-                Submit
-              </Button>
-              <ConfirmOffer
-                open={state.open}
-                handleValueChange={handleValueChange}
-                handleConfirmation={handleConfirmation}
-              />
-              <Typography className={classes.error} color={"error"}>
-                {(state.PriceRequired || state.QtyRequired || state.QtyError) && "Check the fields in red"}
-              </Typography>
-            </Grid>
+      <Paper square className={classes.form}>
+        <Grid container justify={"flex-start"} spacing={24} alignItems={"flex-start"} direction={'row'}>
+          <Grid item xs={12}>
+            <Typography variant={"title"} className={classes.Title}>
+              Send Offer
+            </Typography>
           </Grid>
-        </Paper>
-      </div>
+          <Grid item>
+            <TextField
+              id={'qty'}
+              label={state.QtyError ? "Error: Value too large" : "Quantity:"}
+              error={state.QtyError || state.QtyRequired}
+              value={state.Qty}
+              onChange={handleNumberChange('Qty')}
+              fullWidth
+              onBlur={handleBlur}
+              className={classes.textField}
+              InputProps={{
+                classes: {input: classes.input},
+                endAdornment:
+                  <InputAdornment
+                    position="end"
+                    className={classes.InputAdornment}>{props.unit}{state.Qty > 1 && 's'}
+                  </InputAdornment>,
+              }}
+              InputLabelProps={{shrink: true,}}
+            />
+          </Grid>
+          <Grid item>
+            <TextField
+              id={'price'}
+              label={state.PriceChangeable ? `Counteroffer Price:` : `Price per ${props.unit}:`}
+              value={state.Price}
+              error={state.PriceRequired}
+              onChange={handleNumberChange('Price')}
+              fullWidth
+              onBlur={handleBlur}
+              className={classes.textField}
+              InputLabelProps={{shrink: true,}}
+              disabled={!state.PriceChangeable}
+              InputProps={{
+                classes: {input: classes.input},
+                startAdornment: <InputAdornment position="start">$</InputAdornment>,
+              }}
+            />
+          </Grid>
+          <Grid container item className={classes.checkbox}>
+            {props.allowCounterOffers
+              ?
+              <FormControlLabel
+                control={<Checkbox checked={!state.PriceChangeable} color={"primary"} onChange={handleCheck}/>}
+                label={"Use Listing Price"}
+              />
+              :
+              <Typography color={"primary"} className={classes.Counteroffer}>Counteroffers not available</Typography>
+            }
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              id='Message'
+              label='Message'
+              multiline
+              rows="5"
+              value={state.Message}
+              placeholder='Send a message to ask questions, give additional info, or to set up a line of communication.'
+              onChange={handleChange('Message')}
+              fullWidth
+              InputProps={{classes: {input: classes.input}}}
+              InputLabelProps={{shrink: true}}
+            />
+          </Grid>
+          <Grid container item>
+            <Button variant={"outlined"} color={"primary"} disabled={state.ClickAndConfirm} onClick={handleSubmit}>
+              Submit
+            </Button>
+            <ConfirmOffer
+              open={state.open}
+              handleValueChange={handleValueChange}
+              handleConfirmation={handleConfirmation}
+            />
+            <Typography className={classes.error} color={"error"}>
+              {(state.PriceRequired || state.QtyRequired || state.QtyError) && "Check the fields in red"}
+            </Typography>
+          </Grid>
+        </Grid>
+      </Paper>
     )
   }
 }
