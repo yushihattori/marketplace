@@ -1,12 +1,11 @@
 import React, {Component} from 'react';
 import {withStyles} from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import Loading from '../../../../Components/Loading';
 import Typography from '@material-ui/core/Typography'
 import ListItem from '@material-ui/core/ListItem'
 import Grid from '@material-ui/core/Grid';
 
-const styles = theme => (
+const styles = () => (
   {
     listItem: {
       display: 'flex',
@@ -69,12 +68,14 @@ const styles = theme => (
     }
   }
 );
-
+//The itemCard of all the listings that the user has created. CLicking on it will render all the offers of that listing
 class ItemCard extends Component {
   render() {
-    const {classes, loading, item, handleClick, ClickedId, listingOffers, closeAllExpanded} = this.props;
+    const {classes, item, handleClick, ClickedId, listingOffers, closeAllExpanded} = this.props;
     const {_id, itemname, role, CardImage, createdAt, price, stock,} = item;
+    //The number of offers on this listing
     const NumberOfOffers = listingOffers ? listingOffers.length : 0;
+    //Re-formats the createdAt to become readable
     const created = createdAt.toLocaleString([], {
       month: '2-digit',
       day: '2-digit',
@@ -84,7 +85,6 @@ class ItemCard extends Component {
     });
 
     return (
-      !loading ?
         <ListItem
           button
           divider
@@ -134,17 +134,23 @@ class ItemCard extends Component {
             <Typography className={classes.OffersLabel}>
               {`Number of Offers:`} &nbsp;
             </Typography>
+            {/*This NumberOfOffers could be brighter and bigger and more noticeable. Currently its kind of hidden*/}
             <Typography color={"primary"} className={classes.NumberOfOffers}>
               {NumberOfOffers}
             </Typography>
           </div>
-        </ListItem> : <Loading/>
+        </ListItem>
     )
   }
 }
 
 ItemCard.propTypes = {
   classes: PropTypes.object.isRequired,
+  item: PropTypes.object.isRequired,
+  handleClick: PropTypes.func.isRequired,
+  ClickedId: PropTypes.string,
+  listingOffers: PropTypes.array.isRequired,
+  closeAllExpanded: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(ItemCard)

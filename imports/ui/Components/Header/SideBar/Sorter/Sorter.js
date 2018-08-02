@@ -1,14 +1,13 @@
 import React, {Component} from 'react';
 import Button from '@material-ui/core/Button';
 import SortIcon from '@material-ui/icons/Sort';
-import {withTheme, withStyles} from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import theme from '../../../../Theme'
 import Typography from '@material-ui/core/Typography'
 
-const styles = theme => ({
+const styles = () => ({
   button: {
     fontSize: 15,
     color: 'black',
@@ -26,6 +25,7 @@ const styles = theme => ({
   }
 });
 
+//All the options for the sorting method. The value is the literal "sort" that gets put into a subscribe() and find()
 const options = [
   {
     value: {createdAt: -1},
@@ -35,10 +35,12 @@ const options = [
     value: {createdAt: 1},
     label: 'Oldest',
   },
+  //Placeholder. In the future, it should be based on the number of views, with sub-search based on monthly, weekly, yearly, etc.
   {
     value: {createdAt: -1},
     label: 'Trending',
   },
+  //Placeholder. In the future, it should be based on views and ratings, with sub-search based on monthly, weekly, yearly, etc.
   {
     value: {createdAt: -1},
     label: 'Most Popular',
@@ -60,21 +62,24 @@ const options = [
     label: 'Z - A',
   },
 ];
-
+//Sorts the listing cards with all options in the above array.
 class Sorter extends Component {
   state = {
     anchorEl: null,
     selectedIndex: 0,
   };
 
+  //MaterialUI way of setting the list on the button that clicked open
   handleClick = event => {
     this.setState({anchorEl: event.currentTarget});
   };
 
+  //Closes the list
   handleClose = () => {
     this.setState({anchorEl: null});
   };
 
+  //Changes the value of the sort
   handleSortClick = (event, index) => {
     this.setState({selectedIndex: index, anchorEl: null}, () => {
       this.props.handleChange('sort', options[index].value);
@@ -92,6 +97,7 @@ class Sorter extends Component {
             Sort by:
           </Typography>
         </div>
+        {/*Button to open the sort options. Maps out all the items from the array above*/}
         <Button
           variant={"outlined"}
           size='small'
@@ -124,9 +130,8 @@ class Sorter extends Component {
 
 Sorter.propTypes = {
   classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired,
   handleChange: PropTypes.func.isRequired,
 };
 
-export default withTheme()(withStyles(styles)(Sorter))
+export default withStyles(styles)(Sorter)
 

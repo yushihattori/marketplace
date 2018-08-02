@@ -16,11 +16,13 @@ class App extends Component {
     CurrentPage: '',
     sidebarOpen: false,
     filter: {
-      priceRange:{},
+      priceRange: {},
       BuyerSeller: 'both',
     }
   };
 
+  //Normal handleChange function for setting states. However, when the sidebar opens an event is called so
+  //that the masonary can update
   handleChange = (name, value) => {
     this.setState({[name]: value});
     if (name === 'sidebarOpen') {
@@ -30,6 +32,7 @@ class App extends Component {
     }
   };
 
+  //Changes filter state's values
   handleFilterChange = (name, value) => {
     this.setState({
       ...this.state, filter: {
@@ -38,6 +41,7 @@ class App extends Component {
     })
   };
 
+  //Handles the search-bar input change
   handleInputChange = event => {
     this.setState({input: event.target.value})
   };
@@ -49,6 +53,7 @@ class App extends Component {
       <Fragment>
         <MuiThemeProvider theme={theme}>
           <Router>
+            {/*Header component wraps the entire App so it always stays*/}
             <Header
               {...state}
               {...props}
@@ -70,7 +75,6 @@ class App extends Component {
     )
   }
 }
-
 
 export default withTracker(() => {
   return {

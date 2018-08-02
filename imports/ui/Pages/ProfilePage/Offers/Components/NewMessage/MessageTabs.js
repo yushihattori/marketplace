@@ -26,6 +26,7 @@ const styles = () => (
   }
 );
 
+//Choose between Message or counteroffer
 class MessageTabs extends Component {
   render() {
     const {classes, tab, tabChange} = this.props;
@@ -60,6 +61,8 @@ class MessageTabs extends Component {
 
 MessageTabs.propTypes = {
   classes: PropTypes.object.isRequired,
+  tab: PropTypes.string.isRequired,
+  tabChange: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(MessageTabs)

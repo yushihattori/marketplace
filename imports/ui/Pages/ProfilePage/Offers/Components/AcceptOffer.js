@@ -6,7 +6,7 @@ import Divider from '@material-ui/core/Divider'
 import CheckIcon from '@material-ui/icons/Check'
 import {Meteor} from 'meteor/meteor';
 
-const styles = theme => (
+const styles = () => (
   {
     root: {
       padding: 10,
@@ -25,6 +25,7 @@ const styles = theme => (
 );
 
 class AcceptOffer extends Component {
+  //Button that clicks to accept offer, inserts an agreement message, updates the offer collection and notification collection.
   handleClick = (UserAgree) => {
     const {_id, owner, listingOwnerId, itemId} = this.props.offer;
     if (!UserAgree) {
@@ -47,6 +48,7 @@ class AcceptOffer extends Component {
     const {handleClick} = this;
     const {classes} = this.props;
     const {owner, listingOwnerId, OfferUserAgree, ListingUserAgree} = this.props.offer;
+    //This just figures out whether the logged in user is the owner of the offer or the listing
     let UserAgree = '';
     switch (Meteor.userId()) {
       case owner:
@@ -58,6 +60,7 @@ class AcceptOffer extends Component {
     }
     return (
       <div className={classes.root}>
+        {/*Click to accept offer*/}
         <Button
           color={"secondary"}
           disabled={UserAgree}
@@ -75,6 +78,7 @@ class AcceptOffer extends Component {
 
 AcceptOffer.propTypes = {
   classes: PropTypes.object.isRequired,
+  offer: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(AcceptOffer)

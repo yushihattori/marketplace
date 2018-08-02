@@ -1,12 +1,9 @@
 import React, {Component} from 'react';
-import {withStyles} from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import {Route, Switch, Redirect, withRouter} from 'react-router-dom';
 import YourListings from './YourLIstings/YourListings';
 import YourOffers from './YourOffers/YourOffers';
 import OfferTabs from './Components/OfferTabs';
-
-const styles = theme => ({});
 
 class Offers extends Component {
   state = {
@@ -15,18 +12,20 @@ class Offers extends Component {
     OfferTab: this.props.location.pathname ? this.props.location.pathname.substr(16) : "YourOffers"
   };
 
+  //Normal state changing function on click
   handleClick = (name, value) => {
     this.setState({[name]: value},)
   };
-
+  //Normal state changing function on change
   handleChange = (event, value) => {
     this.setState({OfferTab: value});
   };
-
+  //Changes the page between clicked tabs of YourOffers and YourListings.
   handleTabClick = (page) => {
     this.props.history.push(`/profile/Offers/${page}`);
   };
 
+  //This updates the state OfferTab to whatever page the user is currently on
   componentDidUpdate(prevProps, prevState) {
     const {pathname} = this.props.location;
     const {OfferTab} = this.state;
@@ -68,10 +67,11 @@ class Offers extends Component {
 }
 
 Offers.propTypes = {
-  classes: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
 };
 
-export default withRouter(withStyles(styles)(Offers));
+export default withRouter(Offers);
 
 
 

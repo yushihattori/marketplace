@@ -5,7 +5,7 @@ import ToggleButton, {ToggleButtonGroup} from '@material-ui/lab/ToggleButton';
 import Typography from '@material-ui/core/Typography'
 import ListIcon from '@material-ui/icons/List';
 
-const styles = theme => (
+const styles = () => (
   {
     container:{
       marginBottom: 20,
@@ -29,15 +29,16 @@ const styles = theme => (
     }
   }
 );
-
+//Filter for choosing between to view buyer, seller, or both
 class BuyerSeller extends Component {
-
+  //handles the ToggleButtonGroup changes and updates the parent "BuyerSeller" state.
   handleChange = alignment => {
     alignment !== null &&
     this.props.handleFilterChange('BuyerSeller', alignment)
   };
 
   render() {
+    const {handleChange} = this;
     const {classes, BuyerSeller} = this.props;
     return (
       <div className={classes.container}>
@@ -48,7 +49,7 @@ class BuyerSeller extends Component {
           </Typography>
         </div>
         <div className={classes.root}>
-          <ToggleButtonGroup value={BuyerSeller} exclusive={true} onChange={this.handleChange}>
+          <ToggleButtonGroup value={BuyerSeller} exclusive={true} onChange={handleChange}>
             <ToggleButton disableRipple value={"both"}>
               <Typography variant={"body1"} className={classes.typography}>
                 Both
@@ -73,6 +74,8 @@ class BuyerSeller extends Component {
 
 BuyerSeller.propTypes = {
   classes: PropTypes.object.isRequired,
+  BuyerSeller: PropTypes.string.isRequired,
+  handleFilterChange: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(BuyerSeller)

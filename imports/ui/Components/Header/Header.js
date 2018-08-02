@@ -43,16 +43,16 @@ const styles = {
 
 class Header extends Component {
   render() {
-    const {props} = this;
-    const {classes, CurrentPage, children} = this.props;
-
+    const {classes, CurrentPage, children, sidebarOpen, handleChange, history, input, handleInputChange, filter, sort, view, handleFilterChange} = this.props;
+    //Since the appbar and sidebar are fixed in place, a margin is needed to push the rest of the content inwards when
+    //the sidebar opens. This always has a transition to mimic materials side-bar opening.
     const sidebarTransition = {
       transition: theme.transitions.create(['margin-left'], {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
       })
     };
-    if (props.sidebarOpen && CurrentPage === 'SearchPage') {
+    if (sidebarOpen && CurrentPage === 'SearchPage') {
       sidebarTransition.marginLeft = 350;
     }
 
@@ -62,27 +62,38 @@ class Header extends Component {
           <Toolbar>
             <Grid container className={classes.Grid} alignItems='center' justify='center'>
               <Grid container item sm={4} justify={"flex-start"} alignItems={"center"}>
-                <IconButton onClick={() => props.handleChange('sidebarOpen', !props.sidebarOpen)}>
+
+                {/*Menu icon to open side-bar*/}
+                <IconButton onClick={() => handleChange('sidebarOpen', !sidebarOpen)}>
                   <MenuIcon className={classes.icon}/>
                 </IconButton>
+
+                {/*Marketplace home button*/}
                 <Typography variant="title" className={classes.title}>
-                  <Link to='/' onClick={() => this.props.history.push('/')} className={classes.home}>Marketplace</Link>
+                  <Link to='/' onClick={() => history.push('/')} className={classes.home}>Marketplace</Link>
                 </Typography>
+
+                {/*Simple temporary account login*/}
                 <AccountsUIWrapper/>
               </Grid>
+
               <Grid item sm={4}>
                 <div className={classes.searchBox}>
-                  <SearchBar input={props.input} handleInputChange={props.handleInputChange}/>
+                  {/*Search-bar*/}
+                  <SearchBar input={input} handleInputChange={handleInputChange}/>
                 </div>
               </Grid>
               <Grid container spacing={0} item sm={4} className={classes.item} justify='flex-end' alignItems={'center'}>
                 <Grid item>
-                  {/*<Faker/>*/}
+                  {/*Faker is just a button that allows you to create listings quickly*/}
+                  <Faker/>
                 </Grid>
                 <Grid item>
+                  {/*Form that can let you create new listings*/}
                   {Meteor.user() && <Form/>}
                 </Grid>
                 <Grid item>
+                  {/*Just a button link to bring you to profile page and to YourOffers page*/}
                   <Link to='/profile/Offers/YourOffers'>
                     <IconButton>
                       <AccountCircle className={classes.icon}/>
@@ -94,29 +105,34 @@ class Header extends Component {
           </Toolbar>
         </AppBar>
         <Sidebar
-          filter={props.filter}
-          sort={props.sort}
-          view={props.view}
-          handleChange={props.handleChange}
+          filter={filter}
+          sort={sort}
+          view={view}
+          handleChange={handleChange}
           CurrentPage={CurrentPage}
-          sidebarOpen={props.sidebarOpen && CurrentPage === 'SearchPage'}
-          handleFilterChange={props.handleFilterChange}/>
+          sidebarOpen={sidebarOpen && CurrentPage === 'SearchPage'}
+          handleFilterChange={handleFilterChange}/>
         <div style={sidebarTransition} className={classes.children}>
           {children}
         </div>
       </div>
     )
   }
-
 }
 
 
 Header.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
+  children: PropTypes.object.isRequired,
+  sidebarOpen: PropTypes.bool.isRequired,
+  history: PropTypes.object,
   input: PropTypes.string.isRequired,
   handleInputChange: PropTypes.func.isRequired,
   sort: PropTypes.object.isRequired,
+  filter: PropTypes.object.isRequired,
+  view: PropTypes.string.isRequired,
+  handleFilterChange: PropTypes.func.isRequired,
   handleChange: PropTypes.func.isRequired,
 };
 

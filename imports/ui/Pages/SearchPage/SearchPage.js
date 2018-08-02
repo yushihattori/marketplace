@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {withStyles} from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Cards from './Cards/Cards'
-import theme from "../../Theme";
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Typography from '@material-ui/core/Typography'
 
@@ -21,23 +20,29 @@ const styles = theme => (
   }
 );
 
+//Shows all the listings and allows the user for search stuff
 class SearchPage extends Component {
   state = {
     items: Array.from({length: 20})
   };
 
+  //Sets the page to SearchPage for components like sidebar to know
   componentDidMount() {
     this.props.handleChange('CurrentPage', 'SearchPage');
   };
 
+  //When new props are given, reset the length of items shown back to 20
   componentWillReceiveProps() {
     this.setState({items: Array.from({length: 20})})
   }
 
+  //When the scroll goes down more, fetches more data. Currently Im making an array and grabbing more by increasing
+  //the length of the array but i dont know if thats a very good way of doing things...
   fetchData = () => {
     this.setState({items: this.state.items.concat(Array.from({length: 10}))})
   };
 
+  //Shows title based on what the user wants to see
   getTitle = role => {
     switch (role) {
       case 'buyer':
@@ -52,27 +57,29 @@ class SearchPage extends Component {
   };
 
   render() {
-    const {props, state} = this;
-    const {classes} = this.props;
+    const {state} = this;
+    const {classes, input, sort, filter, view} = this.props;
     return (
       <div>
         <div className={classes.toolbar}/>
         <div>
           <Typography variant={"title"} className={classes.title}>
-            {this.getTitle(props.filter.BuyerSeller)}
+            {this.getTitle(filter.BuyerSeller)}
           </Typography>
           <div className={classes.cards}>
+            {/*Package component that does the kinda cool infinite scroll thing*/}
             <InfiniteScroll
               dataLength={this.state.items.length}
               next={this.fetchData}
               hasMore={true}
               loader={<h4>{' '}</h4>}
             >
+              {/*All the cards and listings come from this component*/}
               <Cards
-                input={props.input}
-                sort={props.sort}
-                filter={props.filter}
-                view={props.view}
+                input={input}
+                sort={sort}
+                filter={filter}
+                view={view}
                 limit={state.items.length}
               />
             </InfiniteScroll>
@@ -85,8 +92,9 @@ class SearchPage extends Component {
 
 SearchPage.propTypes = {
   classes: PropTypes.object.isRequired,
+  input: PropTypes.string,
+  sort: PropTypes.object.isRequired,
+  filter: PropTypes.object.isRequired,
+  view: PropTypes.string.isRequired,
 };
 export default withStyles(styles)(SearchPage)
-
-
-//Change Component, Proptypes, and export Names//

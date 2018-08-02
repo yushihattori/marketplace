@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 
-const styles = theme => (
+const styles = () => (
   {
     root: {
       width: 800,
@@ -39,6 +39,8 @@ const styles = theme => (
   }
 );
 
+//On the ItemPage, this is where all the details are. This component was built very quickly and is just showing a basic
+//idea
 class ItemDetails extends Component {
   render() {
     const {classes, item} = this.props;
@@ -76,9 +78,7 @@ class ItemDetails extends Component {
 
 ItemDetails.propTypes = {
   classes: PropTypes.object.isRequired,
+  item: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(ItemDetails)
-
-
-//Change Component, Proptypes, and export Names//

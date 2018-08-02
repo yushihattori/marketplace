@@ -3,6 +3,7 @@ import {check, Match} from 'meteor/check';
 import Listings from './Listings';
 
 Meteor.methods({
+  //Method to insert a new listing
   'listings.insert'(values) {
     if (!this.userId) {
       throw new Meteor.Error('not-authorized');

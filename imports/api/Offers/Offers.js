@@ -1,6 +1,7 @@
 import {Mongo} from 'meteor/mongo';
 import SimpleSchema from 'simpl-schema';
 
+//Collection of offers that people make on listings
 const Offers = new Mongo.Collection('Offers');
 
 Offers.allow({

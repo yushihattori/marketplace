@@ -7,7 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Panel from './Panel';
 
-const styles = theme => (
+const styles = () => (
   {
     root: {
       height: '100%',
@@ -32,20 +32,15 @@ const styles = theme => (
   }
 );
 
-class ExpandableOffer extends Component {
-  state = {};
-
-  updateOffer = (name, id) => {
-    this.setState({[name]: id})
-  };
-
+//Shows all the offers on the listing.
+class ListingOffers extends Component {
   render() {
-    const {state, updateOffer} = this;
-    const {classes, loading, listingOffers, ClickedId, listing, handleChange, expanded} = this.props;
+    const {classes, listingOffers, ClickedId, listing, handleChange, expanded} = this.props;
     return (
-      (!loading && listingOffers) ?
+      listingOffers ?
         <div className={classes.root}>
           {listingOffers.length > 0 ?
+            //Just the header component
             <Paper>
               <Grid container className={classes.header}>
                 <Grid item xs={2}>
@@ -69,14 +64,15 @@ class ExpandableOffer extends Component {
                   </Typography>
                 </Grid>
               </Grid>
-            </Paper> : ClickedId && <Typography variant={"subheading"} className={classes.none}>No offers received</Typography>
+            </Paper> : ClickedId &&
+            <Typography variant={"subheading"} className={classes.none}>No offers received</Typography>
           }
           <div className={classes.panels}>
+            {/*Maps out all of the offers on that listing*/}
             {listingOffers.map(offer => (ClickedId === offer.itemId &&
               <Panel
                 key={offer._id}
                 handleChange={handleChange}
-                updateOffer={updateOffer}
                 offer={offer}
                 listing={listing}
                 ClickedId={ClickedId}
@@ -90,9 +86,14 @@ class ExpandableOffer extends Component {
   }
 }
 
-ExpandableOffer.propTypes = {
+ListingOffers.propTypes = {
   classes: PropTypes.object.isRequired,
+  listingOffers: PropTypes.array.isRequired,
+  ClickedId: PropTypes.string,
+  listing: PropTypes.object,
+  handleChange: PropTypes.func.isRequired,
+  expanded: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
 };
 
-export default withStyles(styles)(ExpandableOffer)
+export default withStyles(styles)(ListingOffers)
 

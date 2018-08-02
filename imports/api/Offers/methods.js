@@ -4,6 +4,7 @@ import Offers from './Offers';
 import Listings from "../Listings/Listings";
 
 Meteor.methods({
+  //Inserts a new offer
   'offers.insert'(values) {
     if (!this.userId) {
       throw new Meteor.Error('not-authorized');
@@ -33,6 +34,7 @@ Meteor.methods({
       OfferChange = 'none';
     }
 
+    //Also updates the listing when a new offer is created
     Listings.update(
       {_id: values.itemId},
       {$inc: {NumberOfOffers: 1}}
@@ -51,6 +53,7 @@ Meteor.methods({
       DealEnded: false,
     })
   },
+  //Method that updates the offer with the newest price offer and its id
   'offer.update-price'(OfferId, PriceOfferId, PriceOffer) {
     if (!this.userId) {
       throw new Meteor.Error('not-authorized');
@@ -68,6 +71,7 @@ Meteor.methods({
     })
   },
 
+  //Method that updates the offer with the newest qty offer and its id
   'offer.update-qty'(OfferId, QtyOfferId, QtyOffer) {
     if (!this.userId) {
       throw new Meteor.Error('not-authorized');
@@ -85,6 +89,7 @@ Meteor.methods({
     })
   },
 
+  //Updates the offer with whether the user agrees or disagrees with the offer
   'offer.update-agree'(OfferId, OfferOwner, ListingOwner, bool) {
     if (!this.userId) {
       throw new Meteor.Error('not-authorized');

@@ -1,34 +1,36 @@
-import React, {Component} from 'react';
-import {withTheme, withStyles} from '@material-ui/core/styles';
+import React, {Fragment, Component} from 'react';
+import {withStyles} from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import Typography from '@material-ui/core/Typography';
 import PriceRange from './PriceRange/PriceRange';
 import BuyerSeller from './BuyerSeller/BuyerSeller';
 
-const styles = theme => ({});
+const styles = () => ({
 
+});
 
+//Contains all the filters in the side-bar component
 class Filter extends Component {
   render() {
-    const {filter, classes} = this.props;
+    const {filter} = this.props;
 
     return (
-      <div>
+      <Fragment>
+        {/*Filter for choosing buyer, seller, or both*/}
         <BuyerSeller
           BuyerSeller={filter.BuyerSeller}
           handleFilterChange={this.props.handleFilterChange}
         />
+        {/*Filter for price range of items*/}
         <PriceRange
           priceRange={filter.priceRange}
           handleFilterChange={this.props.handleFilterChange}
         />
-      </div>
+      </Fragment>
     )
   }
 }
 
 Filter.propTypes = {
-  classes: PropTypes.object.isRequired,
   filter: PropTypes.object.isRequired,
 };
 

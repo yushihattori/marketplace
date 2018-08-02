@@ -1,6 +1,7 @@
 import {Mongo} from 'meteor/mongo';
 import SimpleSchema from 'simpl-schema';
 
+//Collection of all the listings which are the items that people post to sell or buy
 const Listings = new Mongo.Collection('Listings');
 
 Listings.allow({

@@ -8,7 +8,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Radio from '@material-ui/core/Radio';
 import InputAdornment from '@material-ui/core/InputAdornment';
 
-const styles = theme => ({
+const styles = () => ({
   Fields: {
     marginLeft: '40px'
   },
@@ -54,6 +54,7 @@ const styles = theme => ({
 
 });
 
+//Unit values that can be chosen
 const units = [
   {
     value: 'ton',
@@ -69,6 +70,8 @@ const units = [
   }
 ];
 
+//Currency values. Currently this isn't being used for anything else other than choosing a currency  because you need
+//symbols and stuff for each currency.
 const currencies = [
   {
     value: 'USD'
@@ -294,6 +297,8 @@ class ItemDetailsPage extends Component {
 
 ItemDetailsPage.propTypes = {
   classes: PropTypes.object.isRequired,
+  form: PropTypes.object.isRequired,
+  pageValidate: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(ItemDetailsPage)

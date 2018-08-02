@@ -5,7 +5,7 @@ import CheckIcon from '@material-ui/icons/Check'
 import Typography from "@material-ui/core/Typography";
 import HourglassIcon from '@material-ui/icons/HourglassEmpty';
 
-const styles = theme => (
+const styles = () => (
   {
     hourglass: {
       width: 30,
@@ -31,7 +31,7 @@ const styles = theme => (
     },
   }
 );
-
+//Icon that shows if the user has agreed to the offer or not
 class UserAgreeIcon extends Component {
   render() {
     const {classes, OfferUserAgree, ListingUserAgree, name} = this.props;
@@ -57,7 +57,8 @@ class UserAgreeIcon extends Component {
 UserAgreeIcon.propTypes = {
   classes: PropTypes.object.isRequired,
   name: PropTypes.string.isRequired,
+  ListingUserAgree: PropTypes.bool,
+  OfferUserAgree: PropTypes.bool,
 };
 
 export default withStyles(styles)(UserAgreeIcon)
-

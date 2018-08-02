@@ -1,4 +1,4 @@
-import React, {Fragment, Component} from 'react';
+import React, {Component} from 'react';
 import {withStyles} from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import PropTypes from 'prop-types';
@@ -7,7 +7,7 @@ import Sorter from './Sorter/Sorter'
 import Divider from '@material-ui/core/Divider';
 import ItemView from './ItemView/ItemView'
 
-const styles = theme => (
+const styles = () => (
   {
     container: {
       padding: 30,
@@ -25,25 +25,30 @@ const styles = theme => (
   }
 );
 
+//Sidebar component that contains all the filters and sorts and stuff
 class Sidebar extends Component {
   render() {
-    const {props} = this;
-    const {classes, handleFilterChange, filter, sidebarOpen, CurrentPage} = this.props;
+    const {classes, handleFilterChange, filter, sidebarOpen, CurrentPage, view, handleChange, sort} = this.props;
     return (
       <div>
         <Drawer
-          classes={{
-            paper: classes.drawer
-          }}
+          classes={{paper: classes.drawer}}
           open={sidebarOpen}
           variant="persistent"
         >
           <div className={classes.container}>
+
+            {/*Right now the sidebar is only showing for search-page because it doesn't work on other pages...
+            this part does need a redesign and the menu button on the header needs to be changed as well
+            */}
             {CurrentPage === 'SearchPage' &&
             <div>
-              <ItemView view={props.view} handleChange={props.handleChange}/>
-              <Sorter sort={props.sort} handleChange={props.handleChange}/>
+              {/*Handles what view to view the cards*/}
+              <ItemView view={view} handleChange={handleChange}/>
+              {/*Button that shows a list of sorting options*/}
+              <Sorter sort={sort} handleChange={handleChange}/>
               <Divider className={classes.Divider}/>
+              {/*Holds all the filters. Currently only has price range and listing type*/}
               <Filter
                 filter={filter}
                 handleFilterChange={handleFilterChange}
@@ -62,6 +67,11 @@ Sidebar.propTypes = {
   classes: PropTypes.object.isRequired,
   filter: PropTypes.object.isRequired,
   handleFilterChange: PropTypes.func.isRequired,
+  sidebarOpen: PropTypes.bool.isRequired,
+  CurrentPage: PropTypes.string.isRequired,
+  view: PropTypes.string.isRequired,
+  handleChange: PropTypes.func.isRequired,
+  sort: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(Sidebar)

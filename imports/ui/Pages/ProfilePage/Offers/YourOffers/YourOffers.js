@@ -12,7 +12,7 @@ import NewMessage from '../Components/NewMessage/NewMessage';
 import Typography from '@material-ui/core/Typography'
 import AcceptOffer from "../Components/AcceptOffer";
 
-const styles = theme => (
+const styles = () => (
   {
     root: {
       position: 'relative',
@@ -56,25 +56,21 @@ class YourOffers extends Component {
   };
 
   handleClick = (ClickedOfferId) => {
-    //Just to reset the scroll to bottom when clicked again
+    //Just to reset the scroll to bottom when clicked again so it makes it empty then just replaces it
     this.setState({ClickedOfferId: ''},
       () => this.setState({
         ClickedOfferId: ClickedOfferId,
       }))
   };
 
-  updateOffer = (name, id) => {
-    this.setState({[name]: id})
-  };
-
   render() {
     const {ClickedOfferId} = this.state;
-    const {handleClick, updateOffer, state} = this;
+    const {handleClick} = this;
     const {classes, offers} = this.props;
+    //Grabs the offer that is clicked on to pass as a prop into other components
     const ClickedOffer = offers.find(e => {
       return e._id === ClickedOfferId
     });
-
     return (
       <div className={classes.root}>
         {offers && offers.length > 0 ?
@@ -82,6 +78,7 @@ class YourOffers extends Component {
             <Grid item xs={3}>
               <List className={classes.list}>
                 {offers.map(offer => (
+                  //Lists out all the offerCards
                   <OfferCard
                     OfferId={ClickedOfferId}
                     key={offer._id}
@@ -92,9 +89,12 @@ class YourOffers extends Component {
               </List>
             </Grid>
             {ClickedOffer &&
+            //  Once an offer is clicked on, it shows all the messages for that offer
             <Grid container item direction={"column"} xs={9}>
+              {/*Button to click on to accept the offer*/}
               <AcceptOffer offer={ClickedOffer}/>
               <div className={classes.messages}>
+                {/*Messages for the offer*/}
                 <OfferMessage
                   OfferId={ClickedOffer._id}
                   ListingId={ClickedOffer.itemId}
@@ -103,8 +103,8 @@ class YourOffers extends Component {
                 />
               </div>
               <div className={classes.newMessage}>
+                {/*Component to create new messages*/}
                 <NewMessage
-                  updateOffer={updateOffer}
                   offer={ClickedOffer}
                 />
               </div>
@@ -118,9 +118,10 @@ class YourOffers extends Component {
 
 YourOffers.propTypes = {
   classes: PropTypes.object.isRequired,
+  offers: PropTypes.array.isRequired,
 };
 
-export default withTracker((props) => {
+export default withTracker(() => {
   const offersSubscription = Meteor.subscribe('offers');
   return {
     loading: !offersSubscription.ready(),

@@ -8,9 +8,6 @@ import {Link} from 'react-router-dom';
 import CardMedia from '@material-ui/core/CardMedia';
 
 const styles = {
-  card: {
-    // width: 250,
-  },
   title: {
     fontSize: 16,
     textDecoration: 'none',
@@ -46,6 +43,7 @@ const styles = {
   },
 };
 
+//The normal card view
 class NormalCard extends Component {
 
   render() {
@@ -66,7 +64,7 @@ class NormalCard extends Component {
     return (
       <Fade in={true} timeout={timeout}>
         <div>
-          <Card className={classes.card}>
+          <Card>
             <Link
               to={{
                 pathname: '/item',
@@ -126,10 +124,8 @@ class NormalCard extends Component {
   }
 }
 
-
 NormalCard.propTypes = {
   classes: PropTypes.object.isRequired,
   item: PropTypes.object.isRequired,
 };
-
 export default withStyles(styles)(NormalCard)

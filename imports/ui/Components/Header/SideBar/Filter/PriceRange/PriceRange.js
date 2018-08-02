@@ -2,12 +2,11 @@ import React, {Component} from 'react';
 import {withStyles} from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
-import RangeSlider from './RangeSlider';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import MoneyIcon from '@material-ui/icons/AttachMoney';
 
-const styles = theme => ({
+const styles = () => ({
   root: {
     display: 'flex',
   },
@@ -28,23 +27,26 @@ const styles = theme => ({
   }
 });
 
-
+//Filter for seeing listings between a min and max price range
 class PriceRange extends Component {
   state = {
     min: this.props.priceRange.min,
     max: this.props.priceRange.max,
   };
 
+  //Normal handleChange function except it only accepts number or '.' inputs
   handleNumberChange = name => event => {
     this.setState({
       [name]: event.target.value.replace(/[^\d.]/g, '')
     });
   };
 
+  //The component only updates the parent state after the user blurs from the text field
   handleLeave = () => {
     this.props.handleFilterChange('priceRange', this.state)
   };
 
+  //Enter key also updates parent state
   handleKeyPress = (e) => {
     if (e.key === 'Enter') {
       this.handleLeave();
@@ -62,6 +64,7 @@ class PriceRange extends Component {
           </Typography>
         </div>
         <div className={classes.root}>
+          {/*Minimum price*/}
           <TextField
             id='min'
             className={classes.textField}
@@ -79,6 +82,7 @@ class PriceRange extends Component {
           <Typography style={{paddingTop: 10, fontWeight: 'bold'}}>
             &nbsp; - &nbsp;
           </Typography>
+          {/*Maximum price*/}
           <TextField
             id='max'
             className={classes.textField}

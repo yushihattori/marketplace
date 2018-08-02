@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import TextField from '@material-ui/core/TextField';
-import {withStyles, withTheme} from "@material-ui/core/styles/index";
+import {withStyles} from "@material-ui/core/styles/index";
 import PropTypes from 'prop-types';
 import Paper from '@material-ui/core/Paper';
-import {Redirect, Link, withRouter} from 'react-router';
+import {withRouter} from 'react-router';
 
 const styles = {
   textField: {
@@ -23,7 +23,9 @@ const styles = {
   }
 };
 
+//SearchBar component on the header that allows you to search for items.
 class SearchBar extends Component {
+  //When you're on a different page and you want to search you can still do it from here
   handleKeyPress = (e) => {
     if (e.key === 'Enter') {
       this.props.history.push('/search');
@@ -31,7 +33,7 @@ class SearchBar extends Component {
   };
 
   render() {
-    const {classes} = this.props;
+    const {classes, input, handleInputChange} = this.props;
     return (
       <div>
         <Paper className={classes.paper}>
@@ -39,9 +41,9 @@ class SearchBar extends Component {
           <TextField
             autoFocus
             fullWidth
-            value={this.props.input}
+            value={input}
             onKeyPress={this.handleKeyPress}
-            onChange={this.props.handleInputChange}
+            onChange={handleInputChange}
             className={classes.textField}
             InputProps={{
               disableUnderline: true,
@@ -56,7 +58,6 @@ class SearchBar extends Component {
 
 SearchBar.propTypes = {
   classes: PropTypes.object.isRequired,
-  // theme: PropTypes.object.isRequired,
   input: PropTypes.string.isRequired,
   handleInputChange: PropTypes.func.isRequired,
 };

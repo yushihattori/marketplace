@@ -79,7 +79,9 @@ const styles = () => (
   }
 );
 
+//On the YourOffers page, this is the card you see of all the offers you've made
 class OfferCard extends Component {
+  //Conditional render based on if the offer has changed, and how did it change
   OfferChangeRender = (OfferChange, PriceOffer, QtyOffer, unit) => {
     switch (OfferChange) {
       case 'both':
@@ -95,9 +97,10 @@ class OfferCard extends Component {
   };
 
   render() {
-    const {props, OfferChangeRender} = this;
-    const {classes, listing, loading, offer} = this.props;
+    const {OfferChangeRender} = this;
+    const {classes, listing, loading, offer, OfferId, handleClick} = this.props;
     const {_id, Message, MessageUser, OfferChange, QtyOffer, PriceOffer, username, OfferUserAgree, ListingUserAgree} = offer;
+    //formats the createdAt to a readable date
     const created = offer.createdAt.toLocaleString([], {
       month: '2-digit',
       day: '2-digit',
@@ -110,9 +113,9 @@ class OfferCard extends Component {
         <ListItem
           button
           divider
-          selected={this.props.OfferId === _id}
+          selected={OfferId === _id}
           className={classes.listItem}
-          onClick={() => props.handleClick(offer._id)}
+          onClick={() => handleClick(_id)}
         >
           <div className={classes.header}>
             <div className={classes.Image}>
@@ -122,6 +125,7 @@ class OfferCard extends Component {
               <Typography variant={"headline"} className={classes.ItemName}>
                 {listing.itemname}
               </Typography>
+              {/*Changes based on role of the listing - buying or selling*/}
               <Typography variant={"body1"} className={classes.Role}>
                 {listing.role === "seller" && `Sold by ${listing.username}`}
                 {listing.role === "buyer" && `Bought by ${listing.username}`}
@@ -140,6 +144,7 @@ class OfferCard extends Component {
               </Typography>
             </Grid>
             <Grid item xs={3} className={classes.Icons}>
+              {/*Icons showing which users have agreed so far*/}
               <UserAgreeIcon
                 ListingUserAgree={ListingUserAgree}
                 name={username}
@@ -160,6 +165,8 @@ class OfferCard extends Component {
           </div>
           <Typography className={classes.Message}>
             {Message ?
+              //this is my jankky way of figuring out if a message is supposed to be green. If it starts with the word
+              //#OUA, or "Offer Update Agree", then it changes that message to green. It's not very good. Needs a better way
               Message.substr(0, 4) === "#OUA" ?
                 <span className={classes.AgreeStyle}>{Message.substr(4)}</span> :
                 `${Message.substr(0, 100)} ${Message.length > 100 ? "..." : ''}` : ''
@@ -177,6 +184,11 @@ class OfferCard extends Component {
 
 OfferCard.propTypes = {
   classes: PropTypes.object.isRequired,
+  listing: PropTypes.object,
+  loading: PropTypes.bool.isRequired,
+  offer: PropTypes.object.isRequired,
+  OfferId: PropTypes.string.isRequired,
+  handleClick: PropTypes.func.isRequired,
 };
 
 export default withTracker((props) => {

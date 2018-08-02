@@ -45,28 +45,30 @@ class NewMessage extends Component {
     Message: '',
     tab: 'message',
   };
-
+  //Normal handle change function
   handleChange = name => event => {
     this.setState({[name]: event.target.value});
   };
-
+  //normal handle number change function that only takes in numbers or '.'
   handleNumberChange = name => event => {
     this.setState({
       [name]: event.target.value.replace(/[^\d.]/g, '')
     });
   };
-
+  //pressing enter key sends teh message, unless if the shift key is also pressed which allows the message to go
+  // multiline. However its not working very well right now since the other elements dont resize to it... gotta fix
+  // it somehow...
   handleKeyPress = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       this.handleClick();
     }
   };
-
+  //Changes tabs between messages and counteroffer
   tabChange = (event, value) => {
     this.setState({tab: value})
   };
-
+  //Sends a new message as long as message, qty, or price have a value. Also updates the offer with the new qty or price
   handleClick = () => {
     const {Price, Qty, Message} = this.state;
     const {offer} = this.props;
@@ -85,12 +87,10 @@ class NewMessage extends Component {
       Meteor.call('messages.insert', message, offer.itemId, (error, MessageId) => {
         if (Price) {
           Meteor.call('offer.update-price', OfferId, MessageId, FixedPrice);
-          this.props.updateOffer('PriceOfferId', MessageId);
           this.setState({checked: false});
         }
         if (Qty) {
           Meteor.call('offer.update-qty', OfferId, MessageId, FixedQty);
-          this.props.updateOffer('QtyOfferId', MessageId);
           this.setState({checked: false});
         }
       });
@@ -115,6 +115,7 @@ class NewMessage extends Component {
         }
         <Grid container>
           <Grid container item xs={12}>
+            {/*Tabs so you can choose between sending a message or sending an offer*/}
             <MessageTabs
               tabChange={tabChange}
               tab={state.tab}
@@ -123,6 +124,7 @@ class NewMessage extends Component {
           <Grid container spacing={16} item xs={12} alignItems={"flex-end"} className={classes.NewMessage}>
             {state.tab === "message" &&
             <Grid item xs>
+              {/*Message input field*/}
               <TextField
                 id={'message'}
                 label={'Message'}
@@ -139,6 +141,7 @@ class NewMessage extends Component {
             }
             {state.tab === "counteroffer" &&
             <Grid container spacing={16} item xs={3}>
+              {/*Price input field*/}
               <Grid item xs={6}>
                 <TextField
                   id={'price'}
@@ -154,6 +157,7 @@ class NewMessage extends Component {
                 />
               </Grid>
               <Grid item xs={6}>
+                {/*Qty input field*/}
                 <TextField
                   id={'qty'}
                   label={'Quantity'}
@@ -167,6 +171,7 @@ class NewMessage extends Component {
               </Grid>
             </Grid>
             }
+            {/*Send button*/}
             <Grid item xs={1}>
               <Button variant={"extendedFab"} onClick={handleClick} className={classes.Button} color={"primary"}>
                 Send
@@ -182,6 +187,7 @@ class NewMessage extends Component {
 NewMessage.propTypes = {
   classes: PropTypes.object.isRequired,
   offer: PropTypes.object.isRequired,
+  OfferAgreement: PropTypes.object,
 };
 
 export default withTracker((props) => {

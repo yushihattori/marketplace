@@ -1,6 +1,7 @@
 import {Mongo} from 'meteor/mongo';
 import SimpleSchema from 'simpl-schema';
 
+//All the messages made on the offers
 const Messages = new Mongo.Collection('Messages');
 
 Messages.allow({

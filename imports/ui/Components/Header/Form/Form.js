@@ -1,5 +1,5 @@
-import React, {Fragment, Component} from 'react';
-import {withTheme, withStyles} from '@material-ui/core/styles';
+import React, {Component} from 'react';
+import {withStyles} from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
@@ -55,8 +55,15 @@ const styles = theme => ({
   }
 });
 
-
+//This is the form for when you want to create a new listing. Honestly, this was one of the first components I built
+//so it isn't very good. There are lots of things that could be changed but it works so you know...
 class Form extends Component {
+  //The state holds 2 main values. First is the normal state values of the form, and next is the form detail state.
+  //I don't really like how I did this the first time so I would change it but changing it now would take too much time...
+  //Open should also be a prop. Handles if the form is open or closed.
+  //activeStep is for which step on the form you are on
+  //Completed shows which pages are completed in the form,
+  //form holds all the form values that will be sent into the collection
   state = {
     open: false,
     activeStep: 0,
@@ -71,20 +78,21 @@ class Form extends Component {
       role: '',
       allowCounterOffers: true,
       CardImage: '',
-      BannerImage:'',
+      BannerImage: '',
     },
   };
 
+  //Should be a prop. Opens the form
   handleOpen = () => {
     this.setState({open: true})
-
-    //    LATER ADD IN FEATURE WHERE WHEN CLICK NEW LISTING, YOU JUST CLEAR THIS FORM. THEN ADD A TAB FEATURE WHERE WHEN U CLICK EXCAPE, YOU JUST LEAVE A TAB TO CONTINUE WORKING
   };
 
+  //Should be a prop. Closes the form
   handleClose = () => {
     this.setState({open: false})
   };
 
+  //Changes the value of the form values
   handleChange = name => event => {
     this.setState({
       ...this.state, form: {
@@ -93,6 +101,7 @@ class Form extends Component {
     })
   };
 
+  //Changes the value of the form values but only allows numbers and "."
   handleNumberChange = name => event => {
     this.setState({
       ...this.state, form: {
@@ -101,6 +110,7 @@ class Form extends Component {
     })
   };
 
+  //Handler for checkbox in the form
   handleChecked = name => event => {
     this.setState({
       ...this.state, form: {
@@ -109,6 +119,8 @@ class Form extends Component {
     })
   };
 
+  //This uploads the form details into the collection. Right now, since image upload isn't working I just have it so
+  //random polygon images are the default banner and card image. Obviously that needs to be changed later.
   handleCreateListing = () => {
     const images = [
       "https://static.vecteezy.com/system/resources/previews/000/095/282/non_2x/unique-polygon-background-vector.jpg",
@@ -119,7 +131,7 @@ class Form extends Component {
     const randomImage = Math.round(Math.random() * images.length);
     const randomBanner = Math.round(Math.random() * images.length);
 
-
+    //This changes the string values of price and stock into number values
     this.setState({
       ...this.state, form: {
         ...this.state.form,
@@ -129,13 +141,16 @@ class Form extends Component {
         BannerImage: images[randomBanner],
       }
     }, () => {
-      const form = this.state.form
+      //inserts the new listing then resets the form and closes it. I think there's a race condition
+      // between the reset and meteor.call but It's working fine so uh maybe be careful :)
+      const form = this.state.form;
       Meteor.call('listings.insert', form);
       this.reset()
     });
     this.handleClose()
   };
 
+  //This returns the page content for the page you are currently on in the form.
   getStepContent = page => {
     const props = {
       form: this.state.form,
@@ -148,38 +163,47 @@ class Form extends Component {
     switch (page) {
       case 0:
         return (
+          //First page. A basic item form page
           <ItemDetailsPage
             {...props}
           />
         );
       case 1:
         return (
+          //Second page. Not started. Supposed to be an image upload page or something.
           <ImagesUploadPage
             {...props}
           />
         );
       case 2:
+        //Final page. It was supposed to be a confirm details page.
         return 'Confirm Details';
       default:
         return 'ERROR PAGE NOT FOUND';
     }
   };
 
+  //Changes page based on what the user clicked on
   handleStep = index => {
     this.pageValidate();
     this.setState({activeStep: index});
   };
-
+  //Goes 1 page forward unless you're on the last page
   handleStepNext = () => {
     this.pageValidate();
     this.state.activeStep !== 2 && this.setState({activeStep: this.state.activeStep + 1});
   };
 
+  //Goes 1 page backwards unless if you're on the first page
   handleStepBack = () => {
     this.pageValidate();
     this.state.activeStep !== 0 && this.setState({activeStep: this.state.activeStep - 1});
   };
 
+  //Supposed to validate all the pages and makes sure all the details are filled in. If a page does have all their
+  //respective details filled in, then the state changes which change the page to a green check mark.
+  //Right now, its set to trigger when a change is completed (onBlur()) or when pages go forward/backward...
+  //This could definitely be improved
   pageValidate = () => {
     const {itemname, price, stock, role} = this.state.form;
     const StepOneValidated = !!itemname && !!price && !!stock && !!role;
@@ -187,6 +211,7 @@ class Form extends Component {
 
   };
 
+  //This checks all the values first and makes sure all details are filled before calling the handleCreateListing()
   handleSubmit = (e) => {
     const {completed} = this.state;
     this.pageValidate();
@@ -197,6 +222,7 @@ class Form extends Component {
     }
   };
 
+  //Resets the states to original values
   reset = () => {
     this.setState({
       activeStep: 0,
@@ -217,11 +243,12 @@ class Form extends Component {
   render() {
     const {classes} = this.props;
     const {activeStep, completed} = this.state;
-    const disabled = !(completed[0] && completed[1] && completed[2])
+    const disabled = !(completed[0] && completed[1] && completed[2]);
 
     return (
       <div>
-        {/*New Listing Button*/}
+        {/*New Listing Button that sits on the header component. This should be a separate button that
+         passes props to this form component*/}
         <div>
           <Button size="small" onClick={this.handleOpen} className={classes.button}>
             <PlusIcon className={classes.icon}/>
@@ -229,8 +256,8 @@ class Form extends Component {
           </Button>
         </div>
 
-
         <div>
+          {/*Actual form component*/}
           <Drawer open={this.state.open} anchor='right' onClose={this.handleClose}>
             <div className={classes.form}>
 
@@ -244,15 +271,17 @@ class Form extends Component {
                   {this.state.form.itemname.length > 40 && '...'}
                 </Typography>
               </div>
-
+              {/*Stepper - shows which page you are on*/}
               <PageSteps
                 handleStep={this.handleStep}
                 activeStep={this.state.activeStep}
                 completed={this.state.completed}
               />
+              {/*Contents of the page*/}
               <div>
                 {this.getStepContent(activeStep)}
               </div>
+              {/*Clears and resets the form*/}
               <Button
                 variant='contained'
                 onClick={this.reset}
@@ -260,6 +289,7 @@ class Form extends Component {
               >
                 Reset
               </Button>
+              {/*The set of buttons to go forward, backwards, and submit the form*/}
               <div className={classes.ButtonPosition}>
                 <Button
                   variant='contained'
@@ -297,8 +327,7 @@ class Form extends Component {
 
 Form.propTypes = {
   classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired,
 };
 
-export default withTheme()(withStyles(styles)(Form))
+export default withStyles(styles)(Form)
 

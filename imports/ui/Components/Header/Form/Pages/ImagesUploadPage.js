@@ -1,16 +1,18 @@
 import React, {Component} from 'react';
 import {withStyles} from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import TextField from '@material-ui/core/TextField'
+// import TextField from '@material-ui/core/TextField'
 
-const styles = theme => (
+const styles = () => (
   {}
 );
 
+//this was supposed to be an image upload page but it doesn't work right now... You can uncomment the textfields
+//to put urls of the images in and that works.
 class ImagesUploadPAge extends Component {
   render() {
-    const {props} = this;
-    const {classes, form} = this.props;
+    // const {props} = this;
+    // const {classes, form} = this.props;
     return (
       <div>
         Future feature. Image uploading page.

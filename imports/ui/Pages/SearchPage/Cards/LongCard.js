@@ -40,11 +40,11 @@ const styles = {
   },
 };
 
+//the long card view
 class LongCard extends Component {
 
   render() {
-    const {classes, item, UploadedImage} = this.props;
-
+    const {classes, item} = this.props;
     const created = item.createdAt.toLocaleString([], {
       month: '2-digit',
       day: '2-digit',

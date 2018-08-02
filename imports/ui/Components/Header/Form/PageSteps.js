@@ -10,7 +10,7 @@ import OpenIcon from '@material-ui/icons/RadioButtonUnchecked'
 import theme from '../../../Theme';
 import StepLabel from '@material-ui/core/StepLabel'
 
-const styles = theme => (
+const styles = () => (
   {
     root: {
       padding: 10,
@@ -24,14 +24,13 @@ const styles = theme => (
     },
   }
 );
-
+//The 3 pages on the form
 const pages = ['Item Details', 'Other Info', 'Confirm Details'];
 
-class Template extends Component {
+//The stepper on top of the form that shows the page you are on currently
+class PageSteps extends Component {
   render() {
-    const {classes} = this.props;
-    const {activeStep} = this.props;
-    const {completed} = this.props;
+    const {classes, activeStep, completed} = this.props;
     return (
       <div>
         <Stepper alternativeLabel nonLinear activeStep={activeStep}>
@@ -53,10 +52,6 @@ class Template extends Component {
                     classes={{labelContainer: classes.LabelContainer, label: classes.Label}}>
                     {label}
                   </StepLabel>
-
-                  {/*<div className={classes.ButtonLabel}>*/}
-                  {/*{label}*/}
-                  {/*</div>*/}
                 </StepButton>
               </Step>
             );
@@ -67,11 +62,10 @@ class Template extends Component {
   }
 }
 
-Template.propTypes = {
+PageSteps.propTypes = {
   classes: PropTypes.object.isRequired,
+  activeStep: PropTypes.number.isRequired,
+  completed: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Template)
-
-
-//Change Component, Proptypes, and export Names//
+export default withStyles(styles)(PageSteps)

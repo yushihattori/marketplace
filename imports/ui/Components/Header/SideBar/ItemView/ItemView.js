@@ -5,7 +5,7 @@ import ToggleButton, {ToggleButtonGroup} from '@material-ui/lab/ToggleButton';
 import Typography from '@material-ui/core/Typography'
 import GridIcon from '@material-ui/icons/Apps';
 
-const styles = theme => (
+const styles = () => (
   {
     container: {
       marginBottom: 20,
@@ -30,6 +30,7 @@ const styles = theme => (
   }
 );
 
+//This component is the filter that switches between list, card, and long-card views of the search page listings
 class BuyerSeller extends Component {
 
   handleChange = alignment => {
@@ -48,6 +49,7 @@ class BuyerSeller extends Component {
           </Typography>
         </div>
         <div className={classes.root}>
+          {/*Select between card, long-card, and list views*/}
           <ToggleButtonGroup value={view} exclusive={true} onChange={this.handleChange}>
             <ToggleButton disableRipple value={"Card"}>
               <Typography variant={"body1"} className={classes.typography}>
@@ -73,6 +75,8 @@ class BuyerSeller extends Component {
 
 BuyerSeller.propTypes = {
   classes: PropTypes.object.isRequired,
+  handleChange: PropTypes.func.isRequired,
+  view: PropTypes.string.isRequired,
 };
 
 export default withStyles(styles)(BuyerSeller)

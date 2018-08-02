@@ -1,15 +1,10 @@
 import React, {Component} from 'react';
-import {withStyles} from '@material-ui/core/styles';
-import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import faker from 'faker';
 import {Meteor} from 'meteor/meteor';
 
-const styles = theme => (
-  {}
-);
-
-class Faker extends Component {
+//This component is just to create placeholder listings. Doesn't do anything else
+export default class Faker extends Component {
 
   handleClick = () => {
     const pictureNumber = Math.round((Math.random() * 1084));
@@ -22,7 +17,6 @@ class Faker extends Component {
 
     const fakes = {
       itemname: faker.commerce.productName(6),
-      // unit: faker.hacker.noun(),
       unit: 'ton',
       currency: faker.finance.currencyName(),
       details: faker.lorem.sentence(100),
@@ -38,7 +32,6 @@ class Faker extends Component {
   };
 
   render() {
-    const {classes} = this.props;
     return (
       <div>
         <Button
@@ -50,12 +43,3 @@ class Faker extends Component {
     )
   }
 }
-
-Faker.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(Faker)
-
-
-//Change Component, Proptypes, and export Names//

@@ -11,7 +11,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography'
 import Confetti from 'react-confetti'
 
-const styles = theme => (
+const styles = () => (
   {
     Title: {
       fontSize: 20,
@@ -24,8 +24,10 @@ const styles = theme => (
     }
   }
 );
-
+//When both users agree then this pops up saying congratulations. The confetti is just a joke lol
+//Eventually clicking continue should connect with Intelage to create a new trade form
 class AgreementDialogue extends Component {
+  //Closes the dialogue and deletes from the notifications
   handleClose = () => {
     const {OfferAgreement} = this.props;
     Meteor.call('notification.delete', OfferAgreement)
@@ -53,9 +55,11 @@ class AgreementDialogue extends Component {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
+          {/*Button to just close dialogue*/}
           <Button onClick={handleClose} color={"inherit"} className={classes.Button}>
             Okay
           </Button>
+          {/*Button that continues onto trade form... hopefully*/}
           <Button onClick={handleClose} color={"primary"} className={classes.Button}>
             Continue
           </Button>
@@ -67,6 +71,7 @@ class AgreementDialogue extends Component {
 
 AgreementDialogue.propTypes = {
   classes: PropTypes.object.isRequired,
+  OfferAgreement: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(AgreementDialogue)

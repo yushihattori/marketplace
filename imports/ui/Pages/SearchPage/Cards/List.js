@@ -54,6 +54,7 @@ const styles = {
   }
 };
 
+//The list card view
 class List extends Component {
 
   render() {

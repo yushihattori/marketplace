@@ -64,6 +64,7 @@ class Panel extends Component {
   state = {
     TimedOut: false,
   };
+  //Show a different message based on if you have price offer, qty offer, or both.
   OfferChangeRender = (OfferChange, PriceOffer, QtyOffer, unit) => {
     switch (OfferChange) {
       case 'both':
@@ -77,8 +78,6 @@ class Panel extends Component {
         return null
     }
   };
-
-
   //TimedOut just removes the messages from view so the transitions in expansion panels don't stutter
   componentDidUpdate(prevProps) {
     if (prevProps.expanded !== this.props.expanded) {
@@ -100,7 +99,7 @@ class Panel extends Component {
   render() {
     const {TimedOut} = this.state;
     const {OfferChangeRender} = this;
-    const {classes, offer, expanded, ClickedId, handleChange, updateOffer, listing} = this.props;
+    const {classes, offer, expanded, ClickedId, handleChange, listing} = this.props;
     const {
       username, PriceOffer, QtyOffer, _id, Message, MessageUser, OfferChange, PriceOfferId, QtyOfferId,
       itemId, ListingUserAgree, OfferUserAgree
@@ -111,6 +110,7 @@ class Panel extends Component {
           expanded={expanded === _id}
           onChange={handleChange(_id)}
         >
+          {/*The main header component that shows the information before the panel is clicked on*/}
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
             <Grid container alignItems={"center"}>
               <Grid item xs={2}>
@@ -133,8 +133,10 @@ class Panel extends Component {
                   <Typography className={classes.typography}>
                     {`${MessageUser}: `}
                     <span className={classes.OfferChange}>
+                      {/*Different render based on PriceOffer, QtyOffer*/}
                       {OfferChangeRender(OfferChange, PriceOffer, QtyOffer, listing.unit)}
                       </span>
+                    {/*#OUA changes the color of message to green based on the string #OUA at the beginning >> Not a very good idea but oh well*/}
                     {Message ?
                       Message.substr(0, 4) === "#OUA" ?
                         <span className={classes.AgreeStyle}>{Message.substr(4)}</span> :
@@ -142,6 +144,7 @@ class Panel extends Component {
                   </Typography>
                 </Grid>
                 <Grid item xs={2} className={classes.bothChecksContainer}>
+                  {/*Icons of which users have agreed currently*/}
                   <UserAgreeIcon
                     OfferUserAgree={OfferUserAgree}
                     name={username}
@@ -154,9 +157,11 @@ class Panel extends Component {
               </Grid>
             </Grid>
           </ExpansionPanelSummary>
+          {/*The messages and newMessage components after the panel is clicked on*/}
           <ExpansionPanelDetails className={classes.details}>
             {TimedOut &&
             <Grid container direction={"column"} className={classes.outline}>
+              {/*This message shows when both users have agreed. This was just a test idea*/}
               {offer.OfferUserAgree && offer.ListingUserAgree &&
               <ButtonBase>
                 <Paper elevation={1} square className={classes.StartTrade}>
@@ -166,9 +171,11 @@ class Panel extends Component {
                 </Paper>
               </ButtonBase>
               }
+              {/*AcceptOffer button*/}
               <AcceptOffer offer={offer}/>
               <div className={classes.messages}>
                 {TimedOut ?
+                  //All the messages for this offer
                   <OfferMessage
                     OfferId={offer._id}
                     ListingId={ClickedId}
@@ -180,8 +187,8 @@ class Panel extends Component {
               </div>
               <div className={classes.newMessage}>
                 {TimedOut ?
+                  //Create new message component
                   <NewMessage
-                    updateOffer={updateOffer}
                     offer={offer}
                   /> : ''}
               </div>
@@ -195,6 +202,11 @@ class Panel extends Component {
 
 Panel.propTypes = {
   classes: PropTypes.object.isRequired,
+  offer: PropTypes.object.isRequired,
+  expanded: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+  ClickedId: PropTypes.string,
+  handleChange: PropTypes.func.isRequired,
+  listing: PropTypes.object,
 };
 
 export default withStyles(styles)(Panel)

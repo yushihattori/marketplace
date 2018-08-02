@@ -7,7 +7,7 @@ import Tab from '@material-ui/core/Tab';
 import ListIcon from '@material-ui/icons/List'
 import CompareArrowsIcon from '@material-ui/icons/CompareArrows'
 
-const styles = theme => (
+const styles = () => (
   {
     Paper: {
       paddingTop: 10,
@@ -21,7 +21,8 @@ const styles = theme => (
     }
   }
 );
-
+//This wraps the entire offers page and are able to click between the YourOffers page and YourListings page. Its good
+//as a temporary solution but definitely the design acn be improved on.
 class OfferTabs extends Component {
   render() {
     const {classes, OfferTab, handleChange, children, handleTabClick} = this.props;
@@ -57,6 +58,10 @@ class OfferTabs extends Component {
 
 OfferTabs.propTypes = {
   classes: PropTypes.object.isRequired,
+  OfferTab: PropTypes.string.isRequired,
+  handleChange: PropTypes.func.isRequired,
+  children: PropTypes.object.isRequired,
+  handleTabClick: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(OfferTabs)

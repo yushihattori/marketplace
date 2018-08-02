@@ -5,6 +5,7 @@ import Offers from '../Offers/Offers';
 import Messages from './Messages';
 
 Meteor.methods({
+  //Method to insert a new message
   'messages.insert'(values, itemId) {
     if (!this.userId) {
       throw new Meteor.Error('not-authorized');
@@ -29,6 +30,7 @@ Meteor.methods({
       OfferChange = 'none';
     }
 
+    //Also updates the listing to when the message was sent
     Listings.update(
       {_id: itemId},
       {
@@ -38,6 +40,7 @@ Meteor.methods({
       }
     );
 
+    //Also updates the specific offer to when the message was sent
     Offers.update(
       {_id: values.OfferId},
       {
@@ -49,6 +52,8 @@ Meteor.methods({
         }
       }
     );
+
+    //Inserts the message
     return Messages.insert({
       ...values,
       createdAt: new Date(),
