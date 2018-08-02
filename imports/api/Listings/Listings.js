@@ -28,21 +28,6 @@ const listingsSchema = new SimpleSchema({
     type: Number,
     label: 'Enter item price',
   },
-  CardImage: {
-    type: String,
-    optional: true,
-    label: 'Upload Image',
-  },
-  BannerImage: {
-    type: String,
-    optional: true,
-    label: 'Upload Image',
-  },
-  imageId: {
-    type: String,
-    optional: true,
-    label: 'Upload Image',
-  },
   stock: {
     type: Number,
     label: 'Enter stock amount',
@@ -80,6 +65,31 @@ const listingsSchema = new SimpleSchema({
     type: String,
     label: 'The username of the owner of this trade',
   },
+  updated: {
+    type: Date,
+    optional: true,
+    label: 'When it was last updated with an offer (or first created)'
+  },
+  NumberOfOffers: {
+    type: Number,
+    optional: true,
+    label: 'Number of offers made on this listing',
+  },
+  BannerImage: {
+    type: String,
+    optional: true,
+    label: 'Upload Image',
+  },
+  CardImage: {
+    type: String,
+    optional: true,
+    label: 'Upload Image',
+  },
+  imageId: {
+    type: String,
+    optional: true,
+    label: 'Upload Image',
+  }
 });
 
 Listings.attachSchema(listingsSchema);

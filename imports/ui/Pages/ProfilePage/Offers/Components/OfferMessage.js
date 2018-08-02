@@ -2,9 +2,9 @@ import React, {Component} from 'react';
 import {withStyles} from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import {withTracker} from 'meteor/react-meteor-data';
-import Messages from '../../../../api/Messages';
-import Listings from "../../../../api/Listings";
-import Loading from '../../../Components/Loading';
+import Messages from '../../../../../api/Messages/Messages';
+import Listings from "../../../../../api/Listings/Listings";
+import Loading from '../../../../Components/Loading';
 import Typography from '@material-ui/core/Typography'
 import Grid from '@material-ui/core/Grid';
 import {Meteor} from 'meteor/meteor';
@@ -42,8 +42,9 @@ const styles = theme => (
 );
 
 class OfferMessage extends Component {
+
   scrollToBottom = () => {
-      this.messagesEnd && this.messagesEnd.scrollIntoView({block: "nearest", behavior: "auto"})
+    this.messagesEnd && this.messagesEnd.scrollIntoView({block: "nearest", behavior: "auto"})
   };
 
   componentDidMount() {
@@ -64,13 +65,14 @@ class OfferMessage extends Component {
   };
 
   render() {
+
+    // Currently offer message returns all messages in that offer. Need to limit it and when you scroll up it shows more or less
     const {formatDate, state} = this;
     const {classes, messages, loading, listing, PriceOfferId, QtyOfferId} = this.props;
     const rejected = {
       color: 'grey',
       textDecoration: 'line-through',
     };
-
     return (
       !loading ?
         <div className={classes.root}>
@@ -79,7 +81,8 @@ class OfferMessage extends Component {
               <div key={message._id} className={classes.Container}>
                 <Grid container>
                   <Grid container item>
-                    <Typography color={message.owner === Meteor.userId() ? "primary" : "default"} className={classes.name}>
+                    <Typography color={message.owner === Meteor.userId() ? "primary" : "default"}
+                                className={classes.name}>
                       {message.username}
                     </Typography>
                     <Typography className={classes.created}>
@@ -110,7 +113,11 @@ class OfferMessage extends Component {
                   </Grid>
                   <Grid item xs={12}>
                     <Typography className={classes.Message}>
-                      {message.Message}
+                      {message.Message &&
+                      message.Message.substr(0, 4) === "#OUA" ?
+                        <span style={{color: 'green'}}>{message.Message.substr(4)}</span> :
+                        message.Message
+                      }
                     </Typography>
                   </Grid>
                 </Grid>
@@ -129,6 +136,12 @@ class OfferMessage extends Component {
 
 OfferMessage.propTypes = {
   classes: PropTypes.object.isRequired,
+  loading: PropTypes.bool.isRequired,
+  messages: PropTypes.array.isRequired,
+  listing: PropTypes.object.isRequired,
+  PriceOfferId: PropTypes.string.isRequired,
+  QtyOfferId: PropTypes.string.isRequired,
+
 };
 
 export default withTracker((props) => {
@@ -138,7 +151,7 @@ export default withTracker((props) => {
   return {
     loading: !ListingSubscription.ready() && !messagesSubscription.ready(),
     listing: Listings.findOne({"_id": ListingId}),
-    messages: Messages.find({"OfferId": OfferId},{sort:{createdAt: 1}}).fetch(),
+    messages: Messages.find({"OfferId": OfferId}, {sort: {createdAt: 1}}).fetch(),
   }
 })(withStyles(styles)(OfferMessage))
 

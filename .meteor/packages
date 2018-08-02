@@ -23,3 +23,6 @@ accounts-password
 aldeed:collection2@3.0.0
 promise
 ostrio:files
+cfs:standard-packages
+cfs:gridfs
+cfs:filesystem

@@ -3,6 +3,9 @@ import {withStyles} from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import PropTypes from 'prop-types';
 import Filter from './Filter/Filter';
+import Sorter from './Sorter/Sorter'
+import Divider from '@material-ui/core/Divider';
+import ItemView from './ItemView/ItemView'
 
 const styles = theme => (
   {
@@ -15,6 +18,10 @@ const styles = theme => (
       zIndex: 1,
       width: 350,
     },
+    Divider: {
+      marginTop: 20,
+      marginBottom: 20,
+    }
   }
 );
 
@@ -33,10 +40,16 @@ class Sidebar extends Component {
         >
           <div className={classes.container}>
             {CurrentPage === 'SearchPage' &&
-            <Filter
-              filter={filter}
-              handleFilterChange={handleFilterChange}
-            />
+            <div>
+              <ItemView view={props.view} handleChange={props.handleChange}/>
+              <Sorter sort={props.sort} handleChange={props.handleChange}/>
+              <Divider className={classes.Divider}/>
+              <Filter
+                filter={filter}
+                handleFilterChange={handleFilterChange}
+              />
+              <Divider className={classes.Divider}/>
+            </div>
             }
           </div>
         </Drawer>

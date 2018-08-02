@@ -1,14 +1,11 @@
-import React, {Fragment, Component} from 'react';
-import {withTheme, withStyles} from '@material-ui/core/styles';
+import React, {Component} from 'react';
+import {withStyles} from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Radio from '@material-ui/core/Radio';
-import theme from '../../../../Theme';
 import InputAdornment from '@material-ui/core/InputAdornment';
 
 const styles = theme => ({
@@ -94,7 +91,7 @@ class ItemDetailsPage extends Component {
   render() {
 
     const {props} = this;
-    const {form, image, classes} = this.props;
+    const {form, classes, pageValidate} = this.props;
 
     return (
       <div>
@@ -142,6 +139,7 @@ class ItemDetailsPage extends Component {
                 helperText='Give a descriptive name'
                 margin='normal'
                 autoFocus={true}
+                onBlur={pageValidate}
                 InputProps={{classes: {input: classes.textFieldInput}}}
                 InputLabelProps={{shrink: true, className: classes.textFieldLabel}}
                 FormHelperTextProps={{className: classes.textFieldHelper}}
@@ -163,6 +161,7 @@ class ItemDetailsPage extends Component {
                 placeholder='Stock amount'
                 helperText='Amount of stock available'
                 margin='normal'
+                onBlur={pageValidate}
                 InputProps={{classes: {input: classes.textFieldInput}}}
                 InputLabelProps={{shrink: true, className: classes.textFieldLabel}}
                 FormHelperTextProps={{className: classes.textFieldHelper}}
@@ -181,6 +180,7 @@ class ItemDetailsPage extends Component {
                 value={form.unit}
                 onChange={props.handleChange('unit')}
                 margin='normal'
+                onBlur={pageValidate}
                 InputProps={{classes: {input: classes.textFieldInput}}}
                 InputLabelProps={{shrink: true, className: classes.textFieldLabel}}
                 FormHelperTextProps={{className: classes.textFieldHelper}}
@@ -212,6 +212,7 @@ class ItemDetailsPage extends Component {
                 placeholder='Price'
                 helperText='Price of item per unit'
                 margin='normal'
+                onBlur={pageValidate}
                 InputProps={{
                   classes: {input: classes.textFieldInput},
                   startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -232,6 +233,7 @@ class ItemDetailsPage extends Component {
                 value={form.currency}
                 onChange={props.handleChange('currency')}
                 margin='normal'
+                onBlur={pageValidate}
                 InputProps={{classes: {input: classes.textFieldInput}}}
                 InputLabelProps={{shrink: true, className: classes.textFieldLabel}}
                 FormHelperTextProps={{className: classes.textFieldHelper}}
@@ -276,36 +278,12 @@ class ItemDetailsPage extends Component {
                 value={form.details}
                 placeholder='Give additional details such as quality, weight, etc...'
                 margin="normal"
+                onBlur={pageValidate}
                 onChange={props.handleChange('details')}
                 InputProps={{classes: {input: classes.textFieldInput}}}
                 InputLabelProps={{shrink: true, className: classes.textFieldLabel}}
                 fullWidth
               />
-            </Grid>
-
-            {/*Spacing*/}
-            <Grid item sm={1}/>
-
-            {/*Image upload*/}
-
-            {/*PUT IN COMPONENT LATER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/}
-            <Grid container item sm={12} direction={"column"} alignItems={'center'}
-                  className={classes.uploadBox}>
-              <label htmlFor="image-upload">
-                <img src={image ? URL.createObjectURL(image) : '/upload.jpg'} className={classes.image}/>
-              </label>
-              <input
-                accept="image/*"
-                id="image-upload"
-                className={classes.upload}
-                type="file"
-                onChange={props.handleUpload}
-              />
-              <label htmlFor="image-upload">
-                <Button color="primary" component="span" variant="outlined">
-                  Upload Image
-                </Button>
-              </label>
             </Grid>
           </Grid>
         </div>

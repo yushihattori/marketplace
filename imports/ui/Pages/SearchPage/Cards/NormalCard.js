@@ -1,12 +1,11 @@
 import React, {Component} from 'react';
 import Card from '@material-ui/core/Card';
 import Typography from '@material-ui/core/Typography';
-import {withTheme, withStyles} from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Fade from '@material-ui/core/Fade';
 import {Link} from 'react-router-dom';
-import {withTracker} from 'meteor/react-meteor-data';
-import Files from '../../../../api/Files';
+import CardMedia from '@material-ui/core/CardMedia';
 
 const styles = {
   card: {
@@ -15,6 +14,7 @@ const styles = {
   title: {
     fontSize: 16,
     textDecoration: 'none',
+    height: 40,
   },
   subheader: {
     fontSize: 14,
@@ -22,11 +22,11 @@ const styles = {
   },
   content: {
     margin: 8,
-    // height: 175,
+    height: 130,
   },
   media: {
     width: '100%',
-    height: 'auto',
+    height: 200,
   },
   price: {
     fontSize: 20,
@@ -46,10 +46,10 @@ const styles = {
   },
 };
 
-class ListingCard extends Component {
+class NormalCard extends Component {
 
   render() {
-    const {classes, item, UploadedImage} = this.props;
+    const {classes, item} = this.props;
 
     const created = item.createdAt.toLocaleString([], {
       month: '2-digit',
@@ -59,17 +59,8 @@ class ListingCard extends Component {
       minute: '2-digit'
     });
 
-    // const timeout = Math.random() * (1000 - 300) + 300;
     const timeout = 100;
-    // let image = '';
-    // console.log(UploadedImage)
-    //
-    // if (UploadedImage && UploadedImage[0]) {
-    //   image = UploadedImage[0];
-    // }
-    // if (item.image) {
-    //   image = item.image;
-    // }
+    const defaultImage = "/noimage.png";
 
     const image = item.CardImage;
     return (
@@ -82,13 +73,17 @@ class ListingCard extends Component {
                 search: `?listingId=${item._id}`
               }}
             >
-              <img src={image} title={item.itemname} className={classes.media}/>
+              <CardMedia
+                className={classes.media}
+                title={item.itemname}
+                image={image ? image : defaultImage}
+              />
             </Link>
-            <div style={{position: 'relative'}} className={classes.content}>
+            <div className={classes.content}>
               <div>
                 <Link
                   to={{
-                    pathname: '/item  ',
+                    pathname: '/item',
                     search: `?listingId=${item._id}`
                   }}
                   className={classes.title}
@@ -104,7 +99,8 @@ class ListingCard extends Component {
 
               <div>
                 <Typography variant='body1' className={classes.seller}>
-                  Sold by {item.username}
+                  {item.role === "seller" && `Sold by ${item.username}`}
+                  {item.role === "buyer" && `Bought by ${item.username}`}
                 </Typography>
               </div>
               <div>
@@ -131,18 +127,9 @@ class ListingCard extends Component {
 }
 
 
-ListingCard.propTypes = {
+NormalCard.propTypes = {
   classes: PropTypes.object.isRequired,
   item: PropTypes.object.isRequired,
 };
 
-export default withTracker((props) => {
-  const imageId = props.item.imageId;
-  const filesSubscription = Meteor.subscribe('files', imageId);
-  return {
-    loading: !filesSubscription.ready(),
-
-    //This doesn't work at all and I have no clue what to do so I'm skipping it for now ///////////////////////////
-    UploadedImage: Files.find().fetch(),
-  }
-})(withStyles(styles)(ListingCard))
+export default withStyles(styles)(NormalCard)
