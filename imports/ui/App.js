@@ -1,10 +1,10 @@
 import {withTracker} from 'meteor/react-meteor-data';
-import React, {Fragment, Component} from 'react';
+import React, {Component} from 'react';
 import {BrowserRouter as Router, Route, Switch, Redirect} from 'react-router-dom';
 import theme from './Theme'
 import {MuiThemeProvider} from '@material-ui/core/styles';
 import ItemPage from './Pages/ItemPage/ItemPage'
-import SearchPage from './Pages/SearchPage/SearchPage'
+import ListingsPage from './Pages/ListingsPage/ListingsPage'
 import Header from './Components/Header/Header'
 import ProfilePage from './Pages/ProfilePage/ProfilePage'
 
@@ -50,7 +50,7 @@ class App extends Component {
     const {state, props, handleChange, handleInputChange, handleFilterChange} = this;
 
     return (
-      <Fragment>
+      <div>
         <MuiThemeProvider theme={theme}>
           <Router>
             {/*Header component wraps the entire App so it always stays*/}
@@ -62,8 +62,8 @@ class App extends Component {
               handleFilterChange={handleFilterChange}
             >
               <Switch>
-                <Route exact path='/' render={() => (<Redirect to="/search"/>)}/>
-                <Route path='/search' render={(props) => <SearchPage {...state} {...props} handleChange={handleChange}/>}/>
+                <Route exact path='/' render={() => (<Redirect to="/listings"/>)}/>
+                <Route path='/listings' render={(props) => <ListingsPage {...state} {...props} handleChange={handleChange}/>}/>
                 <Route path='/item' render={(props) => <ItemPage {...state} {...props} handleChange={handleChange}/>}/>
                 <Route path='/profile' render={(props) => <ProfilePage {...state} {...props} handleChange={handleChange}/>}/>
                 <Route render={() => <div style={{paddingTop: 90, paddingLeft: 30}}>Page Not Found</div>}/>
@@ -71,7 +71,7 @@ class App extends Component {
             </Header>
           </Router>
         </MuiThemeProvider>
-      </Fragment>
+      </div>
     )
   }
 }

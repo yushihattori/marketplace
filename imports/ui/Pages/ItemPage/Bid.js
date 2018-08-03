@@ -15,21 +15,16 @@ import ConfirmOffer from './ConfirmOffer';
 const styles = () => (
   {
     form: {
-      padding: 30,
-      width: 800,
-      position: 'absolute',
-      bottom: 50,
+      width: '100%',
       opacity: 0.9,
     },
     textField: {
-      width: 250,
     },
     InputAdornment: {
       fontSize: 20,
       whiteSpace: 'nowrap',
     },
     checkbox: {
-      width: 250,
       marginTop: 12,
     },
     Counteroffer: {
@@ -44,6 +39,9 @@ const styles = () => (
       marginLeft: 10,
       marginTop: 5,
     },
+    Container: {
+      padding: 30,
+    }
   }
 );
 
@@ -146,18 +144,18 @@ class Bid extends Component {
 
   render() {
     const {state, handleChange, handleConfirmation, handleValueChange, handleCheck, handleNumberChange, handleSubmit, handleBlur} = this;
-    const {classes, allowCounterOffers} = this.props;
-    const {unit} = this.props.item;
+    const {classes} = this.props;
+    const {unit, allowCounterOffers} = this.props.item;
     return (
       <Paper square className={classes.form}>
-        <Grid container justify={"flex-start"} spacing={24} alignItems={"flex-start"} direction={'row'}>
+        <Grid className={classes.Container} container justify={"flex-start"} spacing={24} alignItems={"flex-start"} direction={'row'}>
           <Grid item xs={12}>
             {/*Title*/}
             <Typography variant={"title"} className={classes.Title}>
               Send Offer
             </Typography>
           </Grid>
-          <Grid item>
+          <Grid item sm={6} md={6} lg={4}>
             {/*Quantity input field*/}
             <TextField
               id={'qty'}
@@ -179,7 +177,7 @@ class Bid extends Component {
               InputLabelProps={{shrink: true,}}
             />
           </Grid>
-          <Grid item>
+          <Grid item sm={6} md={6} lg={4}>
             {/*Price input field - if counteroffers is true and the checkbox is off*/}
             <TextField
               id={'price'}
@@ -198,7 +196,7 @@ class Bid extends Component {
               }}
             />
           </Grid>
-          <Grid container item className={classes.checkbox}>
+          <Grid container item lg={4} md={12} sm={12} className={classes.checkbox}>
             {/*Checkbox for counteroffers - May want to remove this*/}
             {allowCounterOffers
               ?
@@ -216,7 +214,7 @@ class Bid extends Component {
               id='Message'
               label='Message'
               multiline
-              rows="5"
+              rows="3"
               value={state.Message}
               placeholder='Send a message to ask questions, give additional info, or to set up a line of communication.'
               onChange={handleChange('Message')}

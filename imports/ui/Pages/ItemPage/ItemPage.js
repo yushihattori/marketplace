@@ -8,21 +8,32 @@ import Loading from '../../Components/Loading';
 import Fade from '@material-ui/core/Fade'
 import Bid from './Bid'
 import ItemDetails from './ItemDetails';
+import Grid from '@material-ui/core/Grid'
 
 const styles = () => (
   {
     root: {
       flexGrow: 1,
-      display: 'flex',
       position: 'relative',
-      justifyContent: 'center',
-      //VVV This is a very crude fix. Need a better way...
-      height: '93vh',
+      width: '100%',
+      height: '100%',
+    },
+    GridContainer: {
+      position: 'absolute',
+      width: '100%',
+      height: '100%',
+      padding: 50,
+      paddingRight: 0,
     },
     image: {
+      position: 'absolute',
       width: '100%',
-      height: 'auto',
+      height: '100%',
     },
+    ItemDetails: {
+    },
+    Bid: {
+    }
   }
 );
 
@@ -33,6 +44,7 @@ class ItemPage extends Component {
   componentDidMount() {
     this.props.handleChange('CurrentPage', 'ItemPage');
   }
+
   //This is to change the page when the page changes. The reason for this is that if you don't do this, the component
   //doesn't realize that the page had changed so it doesn't change.
   //Looking at it now, I think I can just do this.props.history.push() to change the page however that does take extra
@@ -53,15 +65,21 @@ class ItemPage extends Component {
         <Fade in={true} timeout={200}>
           <div className={classes.root}>
             <img src={item.BannerImage} className={classes.image}/>
-            {/*Details of the item*/}
-            <ItemDetails
-              item={item}
-            />
-            {/*Form to bid on the item*/}
-            <Bid
-              item={item}
-              history={history}
-            />
+            <Grid container spacing={40} alignItems={'center'} justify={"space-between"} className={classes.GridContainer}>
+              <Grid item md={6} sm={12} className={classes.ItemDetails}>
+                {/*Details of the item*/}
+                <ItemDetails
+                  item={item}
+                />
+              </Grid>
+              <Grid item md={6} sm={12} className={classes.Bid}>
+                {/*Form to bid on the item*/}
+                <Bid
+                  item={item}
+                  history={history}
+                />
+              </Grid>
+            </Grid>
           </div>
         </Fade> :
         <Loading/>

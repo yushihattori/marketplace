@@ -23,12 +23,13 @@ const styles = {
   }
 };
 
-//SearchBar component on the header that allows you to search for items.
+/**SearchBar component on the header that allows you to search for items.
+ * @component*/
 class SearchBar extends Component {
   //When you're on a different page and you want to search you can still do it from here
   handleKeyPress = (e) => {
     if (e.key === 'Enter') {
-      this.props.history.push('/search');
+      this.props.history.push('/listings');
     }
   };
 

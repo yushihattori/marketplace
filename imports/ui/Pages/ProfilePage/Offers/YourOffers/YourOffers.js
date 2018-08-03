@@ -19,7 +19,7 @@ const styles = () => (
       display: 'flex',
       justifyContent: 'center',
       width: '100%',
-      height: '85vh',
+      height: '100%',
       overflow: 'hidden',
     },
     container: {

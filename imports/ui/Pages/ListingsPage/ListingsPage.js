@@ -21,25 +21,25 @@ const styles = theme => (
 );
 
 //Shows all the listings and allows the user for search stuff
-class SearchPage extends Component {
+class ListingsPage extends Component {
   state = {
-    items: Array.from({length: 20})
+    items: Array.from({length: 18})
   };
 
-  //Sets the page to SearchPage for components like sidebar to know
+  //Sets the page to ListingsPage for components like sidebar to know
   componentDidMount() {
-    this.props.handleChange('CurrentPage', 'SearchPage');
+    this.props.handleChange('CurrentPage', 'ListingsPage');
   };
 
   //When new props are given, reset the length of items shown back to 20
   componentWillReceiveProps() {
-    this.setState({items: Array.from({length: 20})})
+    this.setState({items: Array.from({length: 18})})
   }
 
   //When the scroll goes down more, fetches more data. Currently Im making an array and grabbing more by increasing
   //the length of the array but i dont know if thats a very good way of doing things...
   fetchData = () => {
-    this.setState({items: this.state.items.concat(Array.from({length: 10}))})
+    this.setState({items: this.state.items.concat(Array.from({length: 12}))})
   };
 
   //Shows title based on what the user wants to see
@@ -90,11 +90,11 @@ class SearchPage extends Component {
   }
 }
 
-SearchPage.propTypes = {
+ListingsPage.propTypes = {
   classes: PropTypes.object.isRequired,
   input: PropTypes.string,
   sort: PropTypes.object.isRequired,
   filter: PropTypes.object.isRequired,
   view: PropTypes.string.isRequired,
 };
-export default withStyles(styles)(SearchPage)
+export default withStyles(styles)(ListingsPage)

@@ -19,6 +19,8 @@ import theme from "../../Theme";
 const styles = {
   root: {
     flexGrow: 1,
+    position: 'relative',
+    height: '100vh',
   },
   appbar: {
     zIndex: 2,
@@ -37,7 +39,11 @@ const styles = {
     color: 'white',
   },
   children: {
-    marginTop: 60,
+    position: 'absolute',
+    top: 64,
+    left: 0,
+    right: 0,
+    bottom: 0,
   }
 };
 
@@ -52,7 +58,7 @@ class Header extends Component {
         duration: theme.transitions.duration.leavingScreen,
       })
     };
-    if (sidebarOpen && CurrentPage === 'SearchPage') {
+    if (sidebarOpen && CurrentPage === 'ListingsPage') {
       sidebarTransition.marginLeft = 350;
     }
 
@@ -78,7 +84,7 @@ class Header extends Component {
               </Grid>
 
               <Grid item sm={4}>
-                <div className={classes.searchBox}>
+                <div>
                   {/*Search-bar*/}
                   <SearchBar input={input} handleInputChange={handleInputChange}/>
                 </div>
@@ -110,7 +116,7 @@ class Header extends Component {
           view={view}
           handleChange={handleChange}
           CurrentPage={CurrentPage}
-          sidebarOpen={sidebarOpen && CurrentPage === 'SearchPage'}
+          sidebarOpen={sidebarOpen && CurrentPage === 'ListingsPage'}
           handleFilterChange={handleFilterChange}/>
         <div style={sidebarTransition} className={classes.children}>
           {children}

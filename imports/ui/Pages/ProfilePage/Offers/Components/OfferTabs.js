@@ -9,8 +9,16 @@ import CompareArrowsIcon from '@material-ui/icons/CompareArrows'
 
 const styles = () => (
   {
+    root: {
+      flexGrow: 1,
+      height: '100%',
+      position: 'relative',
+    },
     Paper: {
-      paddingTop: 10,
+      position: 'absolute',
+      width: '100%',
+      height: 75,
+      top: 0,
     },
     tabsLabel: {
       fontSize: 18,
@@ -18,6 +26,13 @@ const styles = () => (
     tabsIcon: {
       width: 35,
       height: 35,
+    },
+    children: {
+      position: 'absolute',
+      top: 75,
+      left: 0,
+      right: 0,
+      bottom: 0,
     }
   }
 );
@@ -27,7 +42,7 @@ class OfferTabs extends Component {
   render() {
     const {classes, OfferTab, handleChange, children, handleTabClick} = this.props;
     return (
-      <div>
+      <div className={classes.root}>
         <Paper className={classes.Paper}>
           <Tabs
             value={OfferTab}
@@ -50,7 +65,9 @@ class OfferTabs extends Component {
               classes={{label: classes.tabsLabel}}/>
           </Tabs>
         </Paper>
-        {children}
+        <div className={classes.children}>
+          {children}
+        </div>
       </div>
     )
   }
