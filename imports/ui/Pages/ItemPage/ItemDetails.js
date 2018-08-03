@@ -7,16 +7,16 @@ import Typography from '@material-ui/core/Typography'
 const styles = () => (
   {
     root: {
-      width: 800,
-      height: 200,
-      position: 'absolute',
-      top: 50,
-      padding: 30,
+      width: '100%',
+      height: '100%',
       opacity: 0.9,
+    },
+    container: {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
       overflow: 'hidden',
+      padding: 30,
     },
     ItemName: {
       fontSize: 30,
@@ -46,30 +46,32 @@ class ItemDetails extends Component {
     const {classes, item} = this.props;
     return (
       <Paper square className={classes.root}>
-        <Typography variant={"title"} className={classes.ItemName}>
-          {item.itemname}
-        </Typography>
-        <Typography variant={"caption"} className={classes.Username}>
-          {`Sold by ${item.username}`}
-        </Typography>
-        <div className={classes.Values}>
-          <Typography className={classes.Value}>
-            {`Price: $${item.price}`}
+        <div className={classes.container}>
+          <Typography variant={"title"} className={classes.ItemName}>
+            {item.itemname}
           </Typography>
-          <Typography className={classes.Value}>
-            {`Stock: ${item.stock} ${item.unit}${item.stock > 0 ? 's' : ''}`}
+          <Typography variant={"caption"} className={classes.Username}>
+            {`Sold by ${item.username}`}
           </Typography>
-        </div>
-        <Typography style={{paddingTop: 20, marginTop: 20}} variant={"caption"}>
-          {`Counteroffers ${item.allowCounterOffers ? "allowed" : "not allowed"}`}
-        </Typography>
-        <div className={classes.DetailsContainer}>
-          <Typography variant={"title"} className={classes.DetailsLabel}>
-            Details:
+          <div className={classes.Values}>
+            <Typography className={classes.Value}>
+              {`Price: $${item.price}`}
+            </Typography>
+            <Typography className={classes.Value}>
+              {`Stock: ${item.stock} ${item.unit}${item.stock > 0 ? 's' : ''}`}
+            </Typography>
+          </div>
+          <Typography variant={"caption"}>
+            {`Counteroffers ${item.allowCounterOffers ? "allowed" : "not allowed"}`}
           </Typography>
-          <Typography>
-            {item.details && item.details.length > 0 ? item.details : "No description available"}
-          </Typography>
+          <div className={classes.DetailsContainer}>
+            <Typography variant={"title"} className={classes.DetailsLabel}>
+              Details:
+            </Typography>
+            <Typography>
+              {item.details && item.details.length > 0 ? item.details : "No description available"}
+            </Typography>
+          </div>
         </div>
       </Paper>
     )

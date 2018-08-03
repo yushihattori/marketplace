@@ -38,10 +38,10 @@ class Sidebar extends Component {
         >
           <div className={classes.container}>
 
-            {/*Right now the sidebar is only showing for search-page because it doesn't work on other pages...
+            {/*Right now the sidebar is only showing for listings-page because it doesn't work on other pages...
             this part does need a redesign and the menu button on the header needs to be changed as well
             */}
-            {CurrentPage === 'SearchPage' &&
+            {CurrentPage === 'ListingsPage' &&
             <div>
               {/*Handles what view to view the cards*/}
               <ItemView view={view} handleChange={handleChange}/>

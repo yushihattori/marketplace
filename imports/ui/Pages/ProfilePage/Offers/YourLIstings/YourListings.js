@@ -16,7 +16,7 @@ const styles = () => (
     root: {
       position: 'relative',
       width: '100%',
-      height: '85vh',
+      height: '100%',
       overflow: 'hidden',
       display: 'flex',
       justifyContent: 'center',
