@@ -133,7 +133,7 @@ class OfferCard extends Component {
             </div>
           </div>
           <Grid container alignItems={"center"} justify={"space-between"} className={classes.OfferContainer}>
-            <Grid item xs={9}>
+            <Grid item lg={9} md={12}>
               <Typography variant={"body2"} className={classes.CurrentOffer}>
                 Current Offer:
               </Typography>
@@ -143,7 +143,7 @@ class OfferCard extends Component {
                 {`Qty: ${QtyOffer} ${listing.unit}${QtyOffer > 0 && "s"}`}
               </Typography>
             </Grid>
-            <Grid item xs={3} className={classes.Icons}>
+            <Grid item lg={3} md={12} className={classes.Icons}>
               {/*Icons showing which users have agreed so far*/}
               <UserAgreeIcon
                 ListingUserAgree={ListingUserAgree}
